@@ -1,0 +1,98 @@
+{
+  "Accessibility": {
+    "skipToContent": "Skip to content"
+  },
+  "Nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "reading": "Reading",
+    "toolbox": "Toolbox",
+    "ama": "AMA",
+    "mainNav": "Main navigation"
+  },
+  "Controls": {
+    "theme": "Theme",
+    "switchToLight": "Switch to light theme",
+    "switchToDark": "Switch to dark theme",
+    "lightShort": "Light",
+    "darkShort": "Dark",
+    "language": "Language"
+  },
+  "Home": {
+    "eyebrow": "Personal Site",
+    "title": "Design-forward personal website with a practical toolbox.",
+    "description": "This phase sets up bilingual routing, theme switching, and the first utility surfaces with a clean App Router foundation.",
+    "primaryCta": "View Projects",
+    "secondaryCta": "Open Toolbox"
+  },
+  "Projects": {
+    "title": "Projects",
+    "description": "A minimal placeholder list for upcoming project write-ups.",
+    "itemOneTitle": "Personal Site System",
+    "itemOneDescription": "Visual system and interaction groundwork for the bilingual site.",
+    "itemTwoTitle": "Toolbox Foundations",
+    "itemTwoDescription": "Reusable architecture for Base64, text utilities, and document translation UI."
+  },
+  "Toolbox": {
+    "title": "Toolbox",
+    "description": "Phase 1 includes clear UI placeholders for the first three tools.",
+    "base64Title": "Base64",
+    "base64Description": "Encode and decode text payloads.",
+    "textTitle": "Text Utilities",
+    "textDescription": "Clean, format, and transform text snippets.",
+    "docTitle": "Doc Translate",
+    "docDescription": "Upload a document and review translated output.",
+    "comingSoon": "Coming soon"
+  },
+  "AMA": {
+    "title": "AMA",
+    "description": "Ask a question or leave a message. New posts appear in the public list below.",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "messageLabel": "Message",
+    "submit": "Send message",
+    "sending": "Sending...",
+    "success": "Thanks. Your message was received.",
+    "error": "Something went wrong. Please try again.",
+    "rateLimited": "Too many requests. Please wait a minute and try again.",
+    "listTitle": "Recent messages",
+    "listLoading": "Loading messages...",
+    "listLoadError": "Could not load messages. Try refresh.",
+    "listEmpty": "No messages yet. Be the first one to ask.",
+    "refresh": "Refresh"
+  },
+  "ReadingDemo": {
+    "eyebrow": "Reading Guide Demo",
+    "title": "Scroll-aware guidance with progress and paragraph focus.",
+    "intro": "This page demonstrates a compact reading guide: a short progress meter plus a high-contrast dot that moves to the active paragraph start.",
+    "sections": [
+      {
+        "title": "Why this pattern",
+        "paragraphs": [
+          "A long page can feel directionless when every paragraph has equal visual weight. A small progress indicator gives orientation without competing with content.",
+          "The guide dot is deliberately minimal. It marks where attention can return after a scroll jump, especially on dense writing pages.",
+          "The layout avoids a full-height decorative line. Instead, progress is contained in a short capsule so the interface stays quiet.",
+          "In practice, this pattern works best when typography is comfortable and spacing between paragraphs remains consistent."
+        ]
+      },
+      {
+        "title": "Interaction details",
+        "paragraphs": [
+          "Section activation is driven by IntersectionObserver. Paragraphs become candidates when they enter a focused window in the viewport.",
+          "When several paragraphs overlap, scoring prefers the one closest to a reading focus line near the upper part of the screen.",
+          "Scroll updates are batched with requestAnimationFrame so progress remains smooth without heavy per-event work.",
+          "The guide dot uses small movement and clear contrast, which keeps the signal useful but subtle."
+        ]
+      },
+      {
+        "title": "Accessibility and fallback",
+        "paragraphs": [
+          "With reduced motion enabled, animated following is disabled. The system still reports progress and updates guidance without motion effects.",
+          "The reading guide is decorative and marked as aria-hidden so keyboard and screen-reader navigation stay clean.",
+          "The component is route-agnostic and works in both locale prefixes, as long as anchors are marked with data-reading-anchor.",
+          "This keeps the implementation maintainable while preserving a polished reading experience."
+        ]
+      }
+    ]
+  }
+}

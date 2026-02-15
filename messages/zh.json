@@ -1,0 +1,98 @@
+{
+  "Accessibility": {
+    "skipToContent": "跳到主要内容"
+  },
+  "Nav": {
+    "home": "首页",
+    "projects": "项目",
+    "reading": "阅读",
+    "toolbox": "工具箱",
+    "ama": "AMA",
+    "mainNav": "主导航"
+  },
+  "Controls": {
+    "theme": "主题",
+    "switchToLight": "切换到浅色主题",
+    "switchToDark": "切换到深色主题",
+    "lightShort": "浅色",
+    "darkShort": "深色",
+    "language": "语言"
+  },
+  "Home": {
+    "eyebrow": "个人站点",
+    "title": "面向设计细节的个人网站与实用工具集合。",
+    "description": "当前阶段完成双语路由、主题切换，以及第一批工具入口的基础架构。",
+    "primaryCta": "查看项目",
+    "secondaryCta": "进入工具箱"
+  },
+  "Projects": {
+    "title": "项目",
+    "description": "用于后续项目文章的最小占位列表。",
+    "itemOneTitle": "个人站设计系统",
+    "itemOneDescription": "用于双语站点的视觉规范与交互基础。",
+    "itemTwoTitle": "工具箱基础能力",
+    "itemTwoDescription": "为 Base64、文本工具和文档翻译 UI 准备复用结构。"
+  },
+  "Toolbox": {
+    "title": "工具箱",
+    "description": "Phase 1 先提供三个工具的清晰占位卡片。",
+    "base64Title": "Base64",
+    "base64Description": "对文本进行编码与解码。",
+    "textTitle": "文本工具",
+    "textDescription": "清洗、格式化和转换文本片段。",
+    "docTitle": "文档翻译",
+    "docDescription": "上传文档并查看翻译结果。",
+    "comingSoon": "即将上线"
+  },
+  "AMA": {
+    "title": "AMA",
+    "description": "欢迎提问或留言。提交后会在下方公开列表展示。",
+    "nameLabel": "姓名",
+    "emailLabel": "邮箱",
+    "messageLabel": "留言内容",
+    "submit": "发送消息",
+    "sending": "发送中...",
+    "success": "已收到你的消息，谢谢。",
+    "error": "发送失败，请稍后重试。",
+    "rateLimited": "请求过于频繁，请等待 1 分钟后重试。",
+    "listTitle": "最新留言",
+    "listLoading": "正在加载留言...",
+    "listLoadError": "留言加载失败，请刷新后重试。",
+    "listEmpty": "暂时还没有留言，欢迎第一个提问。",
+    "refresh": "刷新"
+  },
+  "ReadingDemo": {
+    "eyebrow": "阅读引导演示",
+    "title": "带滚动进度与段落聚焦的阅读引导。",
+    "intro": "这个页面演示紧凑型阅读引导：短进度指示器 + 高对比度小点，小点会移动到当前段落开头。",
+    "sections": [
+      {
+        "title": "为什么使用这个模式",
+        "paragraphs": [
+          "在长页面中，如果每个段落视觉权重都一样，读者容易失去方向感。一个小型进度指示可以提供方位，而不抢内容注意力。",
+          "引导点刻意保持极简，用来提示滚动后可以回看的阅读起点，尤其适合信息密度较高的文本页面。",
+          "设计上明确避免贯穿整屏的长线，而把进度收纳在短胶囊里，让界面保持安静克制。",
+          "要让这个模式有效，前提是字号和行距足够舒适，段落节奏稳定。"
+        ]
+      },
+      {
+        "title": "交互细节",
+        "paragraphs": [
+          "当前段落触发优先由 IntersectionObserver 驱动。段落进入视口内的聚焦区域后，才会参与候选。",
+          "当多个段落同时可见时，系统会优先选择更接近阅读焦点线的段落，避免频繁抖动切换。",
+          "滚动进度更新通过 requestAnimationFrame 批处理，避免每次 scroll 事件做重计算。",
+          "引导点移动幅度小、对比明确，信息足够清楚但不会喧宾夺主。"
+        ]
+      },
+      {
+        "title": "可访问性与降级",
+        "paragraphs": [
+          "当用户启用 reduced motion 时，跟随动画会关闭；系统仍可静态更新进度与段落指引。",
+          "阅读引导属于装饰信息，设置为 aria-hidden，不会干扰键盘与屏幕阅读器流程。",
+          "组件与路由解耦，只要段落标记 data-reading-anchor，就能在 /en 与 /zh 下复用。",
+          "这种实现能在保证维护成本可控的同时，保留足够精致的阅读体验。"
+        ]
+      }
+    ]
+  }
+}
