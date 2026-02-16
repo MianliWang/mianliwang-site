@@ -46,10 +46,13 @@ export default async function ReadingPage() {
   const sections = parseSections(t.raw("sections"));
 
   return (
-    <section className="relative">
+    <section className="writing-page-shell">
       <ReadingGuide scopeId="reading-demo-article" />
 
-      <article id="reading-demo-article" className="mx-auto max-w-3xl space-y-12">
+      <article
+        id="reading-demo-article"
+        className="writing-article-pad mx-auto max-w-3xl space-y-12"
+      >
         <header className="space-y-5">
           <p className="text-sm uppercase tracking-[0.18em] text-muted">
             {t("eyebrow")}

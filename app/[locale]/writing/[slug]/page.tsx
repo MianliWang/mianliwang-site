@@ -292,10 +292,13 @@ export default async function WritingArticlePage({
   const appendixSections = getAppendixSections(locale, article.slug);
 
   return (
-    <section className="relative">
+    <section className="writing-page-shell">
       <ReadingHUD scopeId={articleId} />
 
-      <article id={articleId} className="mx-auto max-w-3xl space-y-12 pb-10">
+      <article
+        id={articleId}
+        className="writing-article-pad mx-auto max-w-3xl space-y-12 pb-10"
+      >
         <header className="space-y-5">
           <p className="t-eyebrow">{article.eyebrow}</p>
           <h1 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">

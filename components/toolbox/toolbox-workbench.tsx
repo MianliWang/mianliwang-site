@@ -9,10 +9,14 @@ import { useMemo, useState } from "react";
 import { TOOLBOX_TOOLS } from "./tool-registry";
 import type { ToolboxCategoryId, ToolboxToolId } from "./types";
 
-const TOOL_TEXT_KEY: Record<ToolboxToolId, "base64" | "text" | "doc"> = {
+const TOOL_TEXT_KEY: Record<
+  ToolboxToolId,
+  "base64" | "text" | "textTranslate" | "pdfTranslate"
+> = {
   base64: "base64",
   "text-utils": "text",
-  "doc-translate": "doc",
+  "text-translate": "textTranslate",
+  "pdf-translate": "pdfTranslate",
 };
 
 const CATEGORY_ORDER: ToolboxCategoryId[] = ["encoding", "text", "document"];
@@ -71,7 +75,7 @@ export function ToolboxWorkbench() {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder={t("searchPlaceholder")}
-            className="h-9 pl-8 text-sm"
+            className="toolbox-search-input h-9 text-sm"
             aria-label={t("searchPlaceholder")}
           />
         </label>

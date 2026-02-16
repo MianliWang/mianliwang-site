@@ -1,6 +1,7 @@
-import { Braces, FileText, Languages } from "lucide-react";
+import { Braces, File, FileText, Languages } from "lucide-react";
 import { Base64Tool } from "./tools/base64-tool";
-import { DocTranslateTool } from "./tools/doc-translate-tool";
+import { PdfTranslateTool } from "./tools/pdf-translate-tool";
+import { TextTranslateTool } from "./tools/text-translate-tool";
 import { TextUtilsTool } from "./tools/text-utils-tool";
 import type { ToolboxToolDefinition, ToolboxToolId } from "./types";
 
@@ -18,10 +19,16 @@ export const TOOLBOX_TOOLS: ToolboxToolDefinition[] = [
     component: TextUtilsTool,
   },
   {
-    id: "doc-translate",
+    id: "text-translate",
     category: "document",
     icon: Languages,
-    component: DocTranslateTool,
+    component: TextTranslateTool,
+  },
+  {
+    id: "pdf-translate",
+    category: "document",
+    icon: File,
+    component: PdfTranslateTool,
   },
 ];
 

@@ -70,7 +70,7 @@
     "workspaceEyebrow": "Workbench",
     "workspaceTitle": "Modular utility workspace",
     "workspaceDescription": "Add a new tool by registering one config and one panel component.",
-    "searchPlaceholder": "Search by title or capability",
+    "searchPlaceholder": "",
     "emptySearch": "No tools matched your search.",
     "categories": {
       "encoding": "Encoding",
@@ -166,6 +166,65 @@
           "serviceUnavailable": "Translation service is not configured yet.",
           "generic": "Unable to generate translation right now."
         }
+      },
+      "textTranslate": {
+        "title": "Text Translate",
+        "description": "Text-only translation workflow powered by `/api/translate` and OpenAI Responses API.",
+        "tags": "text translate openai api source target language",
+        "navHint": "Translate plain text",
+        "apiBadge": "Text API",
+        "sourceLanguage": "Source language",
+        "targetLanguage": "Target language",
+        "languages": {
+          "auto": "Auto detect",
+          "zh": "Chinese",
+          "en": "English",
+          "ja": "Japanese"
+        },
+        "inputPlaceholder": "Paste text that needs translation...",
+        "outputPlaceholder": "Translated text will appear here.",
+        "running": "Translating...",
+        "errors": {
+          "emptyInput": "Please provide source text.",
+          "rateLimited": "Too many requests. Please wait and try again.",
+          "serviceUnavailable": "Translation service is not configured yet.",
+          "generic": "Unable to generate translation right now."
+        }
+      },
+      "pdfTranslate": {
+        "title": "PDF Translate (BabelDOC)",
+        "description": "PDF translation workflow powered by the independent FastAPI + BabelDOC service.",
+        "tags": "pdf translate babeldoc fastapi bilingual layout",
+        "navHint": "Translate PDF files",
+        "apiBadge": "PDF API",
+        "sourceLanguage": "Source language",
+        "targetLanguage": "Target language",
+        "outputModeLabel": "Output mode",
+        "outputMode": {
+          "translated": "Translated only",
+          "bilingual": "Bilingual"
+        },
+        "languages": {
+          "auto": "Auto detect",
+          "zh": "Chinese",
+          "en": "English",
+          "ja": "Japanese"
+        },
+        "fileLabel": "Upload PDF file",
+        "fileHint": "Only PDF files are supported in this mode.",
+        "fileSelected": "{name} · {bytes} bytes",
+        "outputPlaceholder": "Run translation to generate a downloadable PDF.",
+        "outputSummary": "File: {fileName}\nMode: {mode}\nSize: {bytes} bytes",
+        "download": "Download PDF",
+        "running": "Processing PDF...",
+        "errors": {
+          "fileRequired": "Please upload a PDF file.",
+          "fileType": "Only PDF files are supported.",
+          "fileTooLarge": "File is too large. Keep it under 25 MB.",
+          "rateLimited": "Too many requests. Please wait and try again.",
+          "serviceUnavailable": "PDF translation service is unavailable.",
+          "generic": "Unable to translate this PDF right now."
+        }
       }
     }
   },
@@ -256,12 +315,14 @@
     "title": "AMA",
     "description": "Ask a question or leave a message. New posts appear in the public list below.",
     "nameLabel": "Name",
-    "emailLabel": "Email",
+    "emailLabel": "Email (optional)",
+    "emailPlaceholder": "name@example.com",
     "messageLabel": "Message",
     "submit": "Send message",
     "sending": "Sending...",
     "success": "Thanks. Your message was received.",
     "error": "Something went wrong. Please try again.",
+    "invalidFields": "Please check your name, email format, and message before submitting.",
     "rateLimited": "Too many requests. Please wait a minute and try again.",
     "listTitle": "Recent messages",
     "listLoading": "Loading messages...",

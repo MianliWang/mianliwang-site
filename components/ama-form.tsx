@@ -25,6 +25,18 @@ type AmaCreateResponse = {
   error?: string;
 };
 
+function parseErrorMessage(errorCode: string | undefined, t: ReturnType<typeof useTranslations>) {
+  if (errorCode === "RATE_LIMITED") {
+    return t("rateLimited");
+  }
+
+  if (errorCode === "INVALID_FIELDS") {
+    return t("invalidFields");
+  }
+
+  return t("error");
+}
+
 function formatCreatedAt(timestamp: string) {
   const parsed = new Date(timestamp);
   if (Number.isNaN(parsed.getTime())) {
@@ -87,13 +99,10 @@ export function AmaForm() {
         body: JSON.stringify(payload),
       });
 
-      const data = (await response.json()) as AmaCreateResponse;
+      const raw = (await response.json().catch(() => null)) as AmaCreateResponse | null;
+      const data = raw ?? { ok: false, error: "UNKNOWN" };
       if (!response.ok || !data.ok || !data.item) {
-        if (data.error === "RATE_LIMITED") {
-          setFeedback(t("rateLimited"));
-        } else {
-          setFeedback(t("error"));
-        }
+        setFeedback(parseErrorMessage(data.error, t));
         setSubmitState("error");
         return;
       }
@@ -130,8 +139,9 @@ export function AmaForm() {
           <Input
             type="email"
             name="email"
-            required
+            autoComplete="email"
             maxLength={AMA_EMAIL_MAX_LENGTH}
+            placeholder={t("emailPlaceholder")}
           />
         </label>
 

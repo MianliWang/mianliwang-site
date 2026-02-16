@@ -76,11 +76,7 @@ export async function POST(request: Request) {
     );
   }
 
-  if (
-    typeof payload.name !== "string" ||
-    typeof payload.email !== "string" ||
-    typeof payload.message !== "string"
-  ) {
+  if (typeof payload.name !== "string" || typeof payload.message !== "string") {
     return NextResponse.json(
       {
         ok: false,
@@ -91,17 +87,16 @@ export async function POST(request: Request) {
   }
 
   const name = normalizeOneLine(payload.name);
-  const email = normalizeOneLine(payload.email);
+  const email = typeof payload.email === "string" ? normalizeOneLine(payload.email) : "";
   const message = normalizeMessage(payload.message);
+  const hasEmail = email.length > 0;
 
   if (
     name.length < 1 ||
     name.length > AMA_NAME_MAX_LENGTH ||
-    email.length < 3 ||
-    email.length > AMA_EMAIL_MAX_LENGTH ||
     message.length < 1 ||
     message.length > AMA_MESSAGE_MAX_LENGTH ||
-    !isValidEmail(email)
+    (hasEmail && (email.length > AMA_EMAIL_MAX_LENGTH || !isValidEmail(email)))
   ) {
     return NextResponse.json(
       {

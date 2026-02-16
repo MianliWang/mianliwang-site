@@ -70,7 +70,7 @@
     "workspaceEyebrow": "工作台",
     "workspaceTitle": "模块化工具工作区",
     "workspaceDescription": "后续新增工具只需新增一个配置项和一个面板组件。",
-    "searchPlaceholder": "按标题或能力搜索工具",
+    "searchPlaceholder": "",
     "emptySearch": "没有匹配的工具。",
     "categories": {
       "encoding": "编码转换",
@@ -166,6 +166,65 @@
           "serviceUnavailable": "翻译服务尚未配置。",
           "generic": "暂时无法生成翻译结果。"
         }
+      },
+      "textTranslate": {
+        "title": "文本翻译",
+        "description": "纯文本翻译工作流：通过 `/api/translate` 调用 OpenAI Responses API。",
+        "tags": "文本 翻译 openai api 语言",
+        "navHint": "翻译纯文本内容",
+        "apiBadge": "文本 API",
+        "sourceLanguage": "源语言",
+        "targetLanguage": "目标语言",
+        "languages": {
+          "auto": "自动识别",
+          "zh": "中文",
+          "en": "英文",
+          "ja": "日文"
+        },
+        "inputPlaceholder": "粘贴需要翻译的文本...",
+        "outputPlaceholder": "翻译结果会显示在这里。",
+        "running": "翻译中...",
+        "errors": {
+          "emptyInput": "请先输入待翻译文本。",
+          "rateLimited": "请求过于频繁，请稍后重试。",
+          "serviceUnavailable": "文本翻译服务尚未配置。",
+          "generic": "暂时无法生成翻译结果。"
+        }
+      },
+      "pdfTranslate": {
+        "title": "PDF 翻译（BabelDOC）",
+        "description": "PDF 翻译工作流：通过独立 FastAPI + BabelDOC 服务处理并下载结果。",
+        "tags": "pdf 翻译 babeldoc fastapi 双语 版式",
+        "navHint": "翻译 PDF 文档",
+        "apiBadge": "PDF API",
+        "sourceLanguage": "源语言",
+        "targetLanguage": "目标语言",
+        "outputModeLabel": "输出模式",
+        "outputMode": {
+          "translated": "仅译文",
+          "bilingual": "双语对照"
+        },
+        "languages": {
+          "auto": "自动识别",
+          "zh": "中文",
+          "en": "英文",
+          "ja": "日文"
+        },
+        "fileLabel": "上传 PDF 文件",
+        "fileHint": "该模式仅支持 PDF 文件。",
+        "fileSelected": "{name} · {bytes} 字节",
+        "outputPlaceholder": "执行翻译后会生成可下载 PDF。",
+        "outputSummary": "文件：{fileName}\n模式：{mode}\n大小：{bytes} 字节",
+        "download": "下载 PDF",
+        "running": "正在处理 PDF...",
+        "errors": {
+          "fileRequired": "请先上传 PDF 文件。",
+          "fileType": "仅支持 PDF 文件。",
+          "fileTooLarge": "文件过大，请控制在 25 MB 以内。",
+          "rateLimited": "请求过于频繁，请稍后重试。",
+          "serviceUnavailable": "PDF 翻译服务不可用。",
+          "generic": "当前无法完成该 PDF 翻译。"
+        }
       }
     }
   },
@@ -256,12 +315,14 @@
     "title": "AMA",
     "description": "欢迎提问或留言。提交后会在下方公开列表展示。",
     "nameLabel": "姓名",
-    "emailLabel": "邮箱",
+    "emailLabel": "邮箱（选填）",
+    "emailPlaceholder": "name@example.com",
     "messageLabel": "留言内容",
     "submit": "发送消息",
     "sending": "发送中...",
     "success": "已收到你的消息，谢谢。",
     "error": "发送失败，请稍后重试。",
+    "invalidFields": "请检查姓名、邮箱格式与留言内容后再提交。",
     "rateLimited": "请求过于频繁，请等待 1 分钟后重试。",
     "listTitle": "最新留言",
     "listLoading": "正在加载留言...",

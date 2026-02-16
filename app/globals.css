@@ -164,8 +164,8 @@ html.theme-transitioning .ui-segmented-pill,
 html.theme-transitioning .ui-segmented-item,
 html.theme-transitioning .ui-card,
 html.theme-transitioning .ui-field,
-html.theme-transitioning .reading-hud-progress,
-html.theme-transitioning .reading-hud-progress-fill,
+html.theme-transitioning .reading-hud-ruler,
+html.theme-transitioning .reading-hud-ruler-fill,
 html.theme-transitioning .reading-hud-marker-rail,
 html.theme-transitioning .reading-hud-marker-dot {
   transition-property: color, background-color, border-color, box-shadow, fill, stroke;
@@ -186,6 +186,24 @@ html.theme-transitioning .reading-hud-marker-dot {
 .section-shell + .section-shell {
   border-top: 1px solid color-mix(in oklab, var(--surface-border) 74%, transparent 26%);
   padding-top: var(--section-space-tight);
+}
+
+.writing-page-shell {
+  position: relative;
+}
+
+.writing-article-pad {
+  border-radius: clamp(1rem, 1.8vw, 1.4rem);
+  border: 1px solid color-mix(in oklab, var(--surface-border) 74%, transparent 26%);
+  background: color-mix(in oklab, var(--surface-level-0) 88%, var(--background) 12%);
+  box-shadow: var(--surface-inset-light), 0 18px 36px rgb(0 0 0 / 0.16);
+  padding-block: clamp(1.2rem, 2.2vw, 1.8rem);
+  padding-inline: clamp(1rem, 2.6vw, 2rem);
+}
+
+.dark .writing-article-pad {
+  background: color-mix(in oklab, var(--surface-level-0) 82%, black 18%);
+  box-shadow: var(--surface-inset-light), 0 20px 38px rgb(0 0 0 / 0.3);
 }
 
 .section-header {
@@ -363,11 +381,17 @@ html.theme-transitioning .reading-hud-marker-dot {
 
 .toolbox-search-icon {
   position: absolute;
-  left: 0.6rem;
+  left: 0.72rem;
   top: 50%;
   z-index: 1;
   transform: translateY(-50%);
   color: var(--muted);
+  pointer-events: none;
+}
+
+.toolbox-search-input {
+  padding-left: 2.18rem;
+  letter-spacing: 0;
 }
 
 .toolbox-nav-groups {
@@ -1206,28 +1230,69 @@ html.theme-transitioning .reading-hud-marker-dot {
   pointer-events: none;
   z-index: 26;
   --reading-hud-progress: 0;
-  --reading-hud-progress-left: 0px;
-  --reading-hud-progress-width: 72px;
+  --reading-hud-ruler-left: 18px;
 }
 
-.reading-hud-progress {
+.reading-hud-ruler {
   position: fixed;
-  top: calc(5.25rem + env(safe-area-inset-top, 0px));
-  left: var(--reading-hud-progress-left);
-  width: max(4px, var(--reading-hud-progress-width));
-  height: 3px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in oklab, var(--foreground) 16%, transparent 84%);
-  background: color-mix(in oklab, var(--surface) 88%, transparent 12%);
+  top: calc(5.6rem + env(safe-area-inset-top, 0px));
+  left: var(--reading-hud-ruler-left);
+  width: 1.1rem;
+  height: min(60vh, 27rem);
+  transform: translateX(-50%);
+  border-radius: var(--radius-soft);
+  background: color-mix(in oklab, var(--surface-level-1) 56%, transparent 44%);
+  border: 1px solid color-mix(in oklab, var(--surface-border) 55%, transparent 45%);
   overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.04);
 }
 
-.reading-hud-progress-fill {
+.reading-hud-ruler::before {
+  content: "";
+  position: absolute;
+  inset: 0.32rem 0.3rem;
+  border-radius: 0.5rem;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--foreground) 36%, transparent 64%) 0 1px,
+      transparent 1px 10px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 48px,
+      color-mix(in oklab, var(--foreground) 50%, transparent 50%) 48px 50px,
+      transparent 50px 96px
+    );
+  opacity: 0.7;
+}
+
+.reading-hud-ruler-fill {
+  position: absolute;
+  inset: 0.32rem 0.3rem;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  transform-origin: top center;
+  transform: scaleY(var(--reading-hud-progress));
+}
+
+.reading-hud-ruler-fill::before {
+  content: "";
   position: absolute;
   inset: 0;
-  transform-origin: left center;
-  transform: scaleX(var(--reading-hud-progress));
-  background: color-mix(in oklab, var(--accent) 76%, var(--foreground) 24%);
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--accent) 72%, var(--foreground) 28%) 0 1px,
+      transparent 1px 10px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 48px,
+      color-mix(in oklab, var(--accent) 84%, var(--foreground) 16%) 48px 50px,
+      transparent 50px 96px
+    );
+  opacity: 0.95;
 }
 
 .reading-hud-marker {
@@ -1265,8 +1330,10 @@ html.theme-transitioning .reading-hud-marker-dot {
 }
 
 @media (max-width: 768px) {
-  .reading-hud-progress {
-    top: calc(4.55rem + env(safe-area-inset-top, 0px));
+  .reading-hud-ruler {
+    top: calc(4.85rem + env(safe-area-inset-top, 0px));
+    width: 0.92rem;
+    height: min(44vh, 18rem);
   }
 
   .reading-hud-marker-rail {
@@ -1298,7 +1365,7 @@ html.theme-transitioning .reading-hud-marker-dot {
   .ui-segmented-item,
   .ui-segmented-pill,
   .ui-field,
-  .reading-hud-progress-fill,
+  .reading-hud-ruler-fill,
   .ui-follow-icon {
     transition: none;
   }
