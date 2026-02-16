@@ -24,6 +24,13 @@
     "description": "A bilingual personal space for projects, notes, and useful utilities, with calm motion language and clear reading hierarchy.",
     "primaryCta": "Explore Projects",
     "secondaryCta": "Open Toolbox",
+    "signalsLabel": "Home highlights",
+    "signalOneTitle": "Built as a cohesive system",
+    "signalOneSummary": "Shared tokens keep typography, surfaces, and interaction behavior consistent.",
+    "signalTwoTitle": "Performance-first interaction",
+    "signalTwoSummary": "Motion is restrained and measurable so dense pages remain smooth and readable.",
+    "signalThreeTitle": "Bilingual by default",
+    "signalThreeSummary": "UI language, navigation flow, and key controls stay aligned in both EN and 中文.",
     "projectsEyebrow": "Projects Preview",
     "projectsTitle": "Recent work with clear intent and strong utility.",
     "projectsSubtitle": "Short snapshots now, full case studies next.",
@@ -36,6 +43,7 @@
     "projectThreeTitle": "AMA Minimal Product",
     "projectThreeSummary": "Route handlers, lightweight storage, and baseline anti-abuse controls with simple operations.",
     "projectThreeMeta": "API · Reliability",
+    "projectAction": "View snapshot",
     "toolboxEyebrow": "Toolbox Preview",
     "toolboxTitle": "Small tools, direct workflows.",
     "toolboxSubtitle": "Focused interfaces that solve frequent utility tasks without setup overhead.",
@@ -56,20 +64,110 @@
     "itemTwoDescription": "Reusable architecture for Base64, text utilities, and document translation UI."
   },
   "Toolbox": {
+    "eyebrow": "Tool Collection",
     "title": "Toolbox",
-    "description": "Phase 1 includes clear UI placeholders for the first three tools.",
-    "entryLabel": "Tool Entry",
-    "base64Title": "Base64",
-    "base64Description": "Encode and decode text payloads.",
-    "base64Guide": "Draft converter",
-    "textTitle": "Text Utilities",
-    "textDescription": "Clean, format, and transform text snippets.",
-    "textGuide": "Draft editor",
-    "docTitle": "Doc Translate",
-    "docDescription": "Upload a document and review translated output.",
-    "docGuide": "Draft upload flow",
-    "openEntry": "Open entry",
-    "comingSoon": "Coming soon"
+    "description": "A scalable framework where each utility follows the same interaction language: clear input, clear output, and predictable actions.",
+    "workspaceEyebrow": "Workbench",
+    "workspaceTitle": "Modular utility workspace",
+    "workspaceDescription": "Add a new tool by registering one config and one panel component.",
+    "searchPlaceholder": "Search by title or capability",
+    "emptySearch": "No tools matched your search.",
+    "categories": {
+      "encoding": "Encoding",
+      "text": "Text",
+      "document": "Document"
+    },
+    "common": {
+      "input": "Input",
+      "output": "Output",
+      "run": "Run",
+      "copy": "Copy",
+      "copied": "Copied",
+      "clear": "Clear",
+      "copyFailed": "Copy failed. Please copy manually."
+    },
+    "tools": {
+      "base64": {
+        "title": "Base64 Encode / Decode",
+        "description": "Convert between UTF-8 text, binary files, and Base64 payloads with proper validation.",
+        "tags": "base64 encode decode file text binary",
+        "navHint": "Text and file payload conversion",
+        "modeEncode": "Encode",
+        "modeDecode": "Decode",
+        "sourceText": "Text",
+        "sourceFile": "File",
+        "inputPlaceholder": "Paste plain text or Base64 payload...",
+        "fileHint": "Choose a file to transform.",
+        "fileSelected": "{name} · {bytes} bytes",
+        "defaultDownload": "decoded-output.bin",
+        "binaryOutput": "Binary output detected ({bytes} bytes). Use download to get the decoded file.",
+        "outputPlaceholder": "Converted result will appear here.",
+        "downloadDecoded": "Download decoded file",
+        "errors": {
+          "emptyInput": "Please provide input text first.",
+          "fileRequired": "Please choose a file before running.",
+          "decodeInvalid": "Invalid Base64 payload. Please verify input."
+        }
+      },
+      "text": {
+        "title": "Text Utilities",
+        "description": "Apply trim, whitespace normalization, case conversion, and optional JSON pretty formatting in one pipeline.",
+        "tags": "trim normalize whitespace uppercase lowercase title case json pretty",
+        "navHint": "Clean and format text blocks",
+        "inputPlaceholder": "Paste raw text, log output, or JSON here...",
+        "outputPlaceholder": "Processed text will appear here.",
+        "options": {
+          "trim": "Trim edges",
+          "normalizeWhitespace": "Normalize whitespace",
+          "jsonPretty": "JSON pretty"
+        },
+        "case": {
+          "none": "Case: keep",
+          "upper": "UPPER",
+          "lower": "lower",
+          "title": "Title"
+        },
+        "errors": {
+          "emptyInput": "Please enter text before processing.",
+          "invalidJson": "JSON pretty failed. Input is not valid JSON."
+        }
+      },
+      "doc": {
+        "title": "Doc Translate",
+        "description": "Phase 1 text translation workflow backed by `/api/translate` and OpenAI Responses API.",
+        "tags": "document translate api upload language glossary",
+        "navHint": "Text translation via API",
+        "apiBadge": "Text API",
+        "sourceLanguage": "Source language",
+        "targetLanguage": "Target language",
+        "tone": "Tone",
+        "languages": {
+          "auto": "Auto detect",
+          "zh": "Chinese",
+          "en": "English",
+          "ja": "Japanese"
+        },
+        "tones": {
+          "balanced": "Balanced",
+          "formal": "Formal",
+          "concise": "Concise"
+        },
+        "inputPlaceholder": "Paste document text here, or upload a plain text file below.",
+        "fileLabel": "Upload source file",
+        "fileHint": "Supports plain text documents in phase 1.",
+        "fileSelected": "{name} · {bytes} bytes",
+        "glossaryPlaceholder": "Optional glossary, one term per line.",
+        "outputPlaceholder": "Translation output will appear here.",
+        "running": "Translating...",
+        "errors": {
+          "emptyInput": "Please provide source text or upload a file.",
+          "fileTooLarge": "File is too large. Keep it under 2 MB for phase 1.",
+          "rateLimited": "Too many requests. Please wait and try again.",
+          "serviceUnavailable": "Translation service is not configured yet.",
+          "generic": "Unable to generate translation right now."
+        }
+      }
+    }
   },
   "Writing": {
     "eyebrow": "Writing",

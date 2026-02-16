@@ -1,0 +1,139 @@
+openapi: 3.1.0
+info:
+  title: PDF Translate Service
+  version: 0.1.0
+  description: >
+    Independent FastAPI service for PDF translation using BabelDOC.
+    Returns translated-only PDF or bilingual PDF while preserving layout as much as possible.
+servers:
+  - url: http://localhost:8080
+paths:
+  /health:
+    get:
+      tags: [system]
+      summary: Health check
+      operationId: health
+      responses:
+        "200":
+          description: Service healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, service]
+                properties:
+                  ok:
+                    type: boolean
+                    const: true
+                  service:
+                    type: string
+                    example: pdf-translate-api
+  /translate/pdf:
+    post:
+      tags: [translate]
+      summary: Translate a PDF via BabelDOC
+      operationId: translatePdf
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, target_lang]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Source PDF file.
+                source_lang:
+                  type: string
+                  default: auto
+                  description: Source language token, e.g. auto/en/zh.
+                target_lang:
+                  type: string
+                  default: en
+                  description: Target language token, e.g. en/zh/ja.
+                output_mode:
+                  type: string
+                  enum: [translated, bilingual]
+                  default: bilingual
+                  description: >
+                    translated = translated-only PDF, bilingual = dual-language PDF.
+      responses:
+        "200":
+          description: Translated PDF bytes
+          headers:
+            Content-Disposition:
+              description: Download file name
+              schema:
+                type: string
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "400":
+          $ref: "#/components/responses/Error400"
+        "413":
+          $ref: "#/components/responses/Error413"
+        "415":
+          $ref: "#/components/responses/Error415"
+        "422":
+          $ref: "#/components/responses/Error422"
+        "429":
+          $ref: "#/components/responses/Error429"
+        "500":
+          $ref: "#/components/responses/Error500"
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [ok, error]
+      properties:
+        ok:
+          type: boolean
+          const: false
+        error:
+          type: string
+          examples:
+            - RATE_LIMITED
+            - TRANSLATION_FAILED
+        detail:
+          type: string
+  responses:
+    Error400:
+      description: Invalid request payload
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Error413:
+      description: Uploaded file too large
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Error415:
+      description: Unsupported media type (not a PDF)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Error422:
+      description: FastAPI validation error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Error429:
+      description: Rate limited
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Error500:
+      description: BabelDOC failure / internal failure
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"

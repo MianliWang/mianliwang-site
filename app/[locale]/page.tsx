@@ -9,6 +9,7 @@ import {
   FolderKanban,
   Gauge,
   Languages,
+  Orbit,
   ShieldCheck,
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -61,16 +62,34 @@ export default async function HomePage() {
     },
   ] as const;
 
+  const signals = [
+    {
+      title: t("signalOneTitle"),
+      summary: t("signalOneSummary"),
+      icon: Orbit,
+    },
+    {
+      title: t("signalTwoTitle"),
+      summary: t("signalTwoSummary"),
+      icon: Gauge,
+    },
+    {
+      title: t("signalThreeTitle"),
+      summary: t("signalThreeSummary"),
+      icon: Languages,
+    },
+  ] as const;
+
   return (
     <div className="page-stack">
-      <section className="grid gap-8 pt-4">
-        <div className="section-header">
+      <section className="home-hero section-shell">
+        <div className="section-header max-w-[var(--reading-max)]">
           <p className="t-eyebrow">{t("eyebrow")}</p>
           <h1 className="t-display">{t("title")}</h1>
           <p className="t-lead">{t("description")}</p>
         </div>
 
-        <div className="flex flex-wrap gap-3">
+        <div className="home-hero-actions">
           <Link href="/projects" className={buttonClassName("primary")}>
             {t("primaryCta")}
             <ArrowRight size={14} aria-hidden="true" className="ui-follow-icon" />
@@ -80,16 +99,32 @@ export default async function HomePage() {
             <ArrowRight size={14} aria-hidden="true" className="ui-follow-icon" />
           </Link>
         </div>
+
+        <ul className="home-signal-grid" aria-label={t("signalsLabel")}>
+          {signals.map((signal) => {
+            const Icon = signal.icon;
+
+            return (
+              <li key={signal.title} className="home-signal-card">
+                <span className="home-signal-icon" aria-hidden="true">
+                  <Icon size={14} />
+                </span>
+                <p className="home-signal-title">{signal.title}</p>
+                <p className="home-signal-copy">{signal.summary}</p>
+              </li>
+            );
+          })}
+        </ul>
       </section>
 
-      <section className="grid gap-6">
+      <section className="section-shell">
         <SectionHeader
           eyebrow={t("projectsEyebrow")}
           title={t("projectsTitle")}
           subtitle={t("projectsSubtitle")}
         />
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="home-preview-grid md:grid-cols-2 xl:grid-cols-3">
           {projects.map((project) => {
             const Icon = project.icon;
             return (
@@ -97,23 +132,19 @@ export default async function HomePage() {
                 key={project.title}
                 as="article"
                 interactive
-                className="grid gap-4 p-5"
+                className="home-preview-card"
               >
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-soft)] border border-surface-border bg-surface-2 text-accent">
+                <div className="home-preview-icon">
                   <Icon size={17} aria-hidden="true" className="ui-follow-icon" />
                 </div>
                 <div className="grid gap-2">
-                  <h3 className="text-[1.03rem] font-semibold leading-snug tracking-tight">
-                    {project.title}
-                  </h3>
-                  <p className="text-sm leading-7 text-muted">{project.summary}</p>
-                  <p className="text-[0.73rem] font-medium uppercase tracking-[0.16em] text-muted">
-                    {project.meta}
-                  </p>
+                  <h3 className="t-card-title">{project.title}</h3>
+                  <p className="t-card-copy">{project.summary}</p>
+                  <p className="t-card-meta">{project.meta}</p>
                 </div>
                 <div>
                   <Link href={project.href} className={buttonClassName("ghost", "px-0")}>
-                    {t("primaryCta")}
+                    {t("projectAction")}
                     <ArrowRight size={14} aria-hidden="true" className="ui-follow-icon" />
                   </Link>
                 </div>
@@ -123,14 +154,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="grid gap-6">
+      <section className="section-shell">
         <SectionHeader
           eyebrow={t("toolboxEyebrow")}
           title={t("toolboxTitle")}
           subtitle={t("toolboxSubtitle")}
         />
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="home-preview-grid md:grid-cols-2 xl:grid-cols-3">
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (
@@ -138,16 +169,14 @@ export default async function HomePage() {
                 key={tool.title}
                 as="article"
                 interactive
-                className="grid gap-4 p-5"
+                className="home-preview-card"
               >
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-soft)] border border-surface-border bg-surface-2 text-accent">
+                <div className="home-preview-icon">
                   <Icon size={17} aria-hidden="true" className="ui-follow-icon" />
                 </div>
                 <div className="grid gap-2">
-                  <h3 className="text-[1.03rem] font-semibold leading-snug tracking-tight">
-                    {tool.title}
-                  </h3>
-                  <p className="text-sm leading-7 text-muted">{tool.summary}</p>
+                  <h3 className="t-card-title">{tool.title}</h3>
+                  <p className="t-card-copy">{tool.summary}</p>
                 </div>
                 <div>
                   <Link href={tool.href} className={buttonClassName("ghost", "px-0")}>

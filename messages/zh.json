@@ -24,6 +24,13 @@
     "description": "这里承载项目记录、技术笔记和高频小工具，强调可读层级、低干扰动效与长期可维护性。",
     "primaryCta": "浏览项目",
     "secondaryCta": "打开工具箱",
+    "signalsLabel": "首页亮点",
+    "signalOneTitle": "按系统化方式构建",
+    "signalOneSummary": "通过统一 token 组织排版、表面层级与交互反馈，减少样式漂移。",
+    "signalTwoTitle": "性能优先的交互",
+    "signalTwoSummary": "动效克制且可度量，保证信息密度较高时依然顺滑可读。",
+    "signalThreeTitle": "双语作为默认能力",
+    "signalThreeSummary": "EN 与 中文在导航、语言切换和关键控件上保持同一体验语义。",
     "projectsEyebrow": "项目预览",
     "projectsTitle": "近期工作，强调清晰目标与可用价值。",
     "projectsSubtitle": "目前提供短摘要，后续补充完整案例拆解。",
@@ -36,6 +43,7 @@
     "projectThreeTitle": "AMA 最小产品化",
     "projectThreeSummary": "通过 Route Handlers、轻量存储与基础防滥用策略实现可用闭环。",
     "projectThreeMeta": "API · Reliability",
+    "projectAction": "查看摘要",
     "toolboxEyebrow": "工具箱预览",
     "toolboxTitle": "小而专注，直达结果。",
     "toolboxSubtitle": "以清晰界面解决高频工具场景，尽量减少额外配置成本。",
@@ -56,20 +64,110 @@
     "itemTwoDescription": "为 Base64、文本工具和文档翻译 UI 准备复用结构。"
   },
   "Toolbox": {
+    "eyebrow": "工具集合",
     "title": "工具箱",
-    "description": "Phase 1 先提供三个工具的清晰占位卡片。",
-    "entryLabel": "工具条目",
-    "base64Title": "Base64",
-    "base64Description": "对文本进行编码与解码。",
-    "base64Guide": "转换器草稿",
-    "textTitle": "文本工具",
-    "textDescription": "清洗、格式化和转换文本片段。",
-    "textGuide": "编辑器草稿",
-    "docTitle": "文档翻译",
-    "docDescription": "上传文档并查看翻译结果。",
-    "docGuide": "上传流程草稿",
-    "openEntry": "进入条目",
-    "comingSoon": "即将上线"
+    "description": "以可扩展框架组织工具：统一输入输出结构、统一反馈语言、统一交互细节。",
+    "workspaceEyebrow": "工作台",
+    "workspaceTitle": "模块化工具工作区",
+    "workspaceDescription": "后续新增工具只需新增一个配置项和一个面板组件。",
+    "searchPlaceholder": "按标题或能力搜索工具",
+    "emptySearch": "没有匹配的工具。",
+    "categories": {
+      "encoding": "编码转换",
+      "text": "文本处理",
+      "document": "文档处理"
+    },
+    "common": {
+      "input": "输入区",
+      "output": "输出区",
+      "run": "执行",
+      "copy": "复制",
+      "copied": "已复制",
+      "clear": "清空",
+      "copyFailed": "复制失败，请手动复制。"
+    },
+    "tools": {
+      "base64": {
+        "title": "Base64 编码 / 解码",
+        "description": "在 UTF-8 文本、二进制文件与 Base64 字符串之间稳定转换，并提供基础校验。",
+        "tags": "base64 编码 解码 文件 文本 二进制",
+        "navHint": "文本与文件载荷转换",
+        "modeEncode": "编码",
+        "modeDecode": "解码",
+        "sourceText": "文本",
+        "sourceFile": "文件",
+        "inputPlaceholder": "粘贴普通文本或 Base64 字符串...",
+        "fileHint": "选择要处理的文件。",
+        "fileSelected": "{name} · {bytes} 字节",
+        "defaultDownload": "decoded-output.bin",
+        "binaryOutput": "检测到二进制输出（{bytes} 字节），请通过下载获取解码文件。",
+        "outputPlaceholder": "转换结果将显示在这里。",
+        "downloadDecoded": "下载解码文件",
+        "errors": {
+          "emptyInput": "请先输入待处理文本。",
+          "fileRequired": "请先选择文件再执行。",
+          "decodeInvalid": "Base64 内容无效，请检查输入。"
+        }
+      },
+      "text": {
+        "title": "文本工具",
+        "description": "在同一流程内完成 trim、空白规范化、大小写转换与 JSON pretty。",
+        "tags": "trim 空白 规范化 大小写 title json pretty",
+        "navHint": "清洗并规范文本块",
+        "inputPlaceholder": "粘贴原始文本、日志或 JSON 内容...",
+        "outputPlaceholder": "处理后的文本会显示在这里。",
+        "options": {
+          "trim": "去除首尾空白",
+          "normalizeWhitespace": "规范化空白字符",
+          "jsonPretty": "JSON 美化"
+        },
+        "case": {
+          "none": "大小写：保持",
+          "upper": "全大写",
+          "lower": "全小写",
+          "title": "标题式"
+        },
+        "errors": {
+          "emptyInput": "请先输入文本再处理。",
+          "invalidJson": "JSON 美化失败：输入不是有效 JSON。"
+        }
+      },
+      "doc": {
+        "title": "文档翻译",
+        "description": "Phase 1 文本翻译流程：通过 `/api/translate` 调用 OpenAI Responses API。",
+        "tags": "文档 翻译 api 上传 语言 术语",
+        "navHint": "通过 API 文本翻译",
+        "apiBadge": "文本 API",
+        "sourceLanguage": "源语言",
+        "targetLanguage": "目标语言",
+        "tone": "语气",
+        "languages": {
+          "auto": "自动识别",
+          "zh": "中文",
+          "en": "英文",
+          "ja": "日文"
+        },
+        "tones": {
+          "balanced": "平衡",
+          "formal": "正式",
+          "concise": "简洁"
+        },
+        "inputPlaceholder": "在此粘贴文档文本，或下方上传纯文本文件。",
+        "fileLabel": "上传源文件",
+        "fileHint": "Phase 1 先支持纯文本文件。",
+        "fileSelected": "{name} · {bytes} 字节",
+        "glossaryPlaceholder": "可选术语表：每行一个术语。",
+        "outputPlaceholder": "翻译结果会显示在这里。",
+        "running": "翻译中...",
+        "errors": {
+          "emptyInput": "请提供源文本或上传文件。",
+          "fileTooLarge": "文件过大，Phase 1 请控制在 2 MB 以内。",
+          "rateLimited": "请求过于频繁，请稍后重试。",
+          "serviceUnavailable": "翻译服务尚未配置。",
+          "generic": "暂时无法生成翻译结果。"
+        }
+      }
+    }
   },
   "Writing": {
     "eyebrow": "写作",

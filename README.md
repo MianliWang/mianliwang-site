@@ -33,6 +33,23 @@ AMA_UPSTASH_KEY=ama:messages
 AMA_UPSTASH_RATE_PREFIX=ama:rate
 ```
 
+## Phase 2 PDF translation service (FastAPI)
+
+An independent FastAPI service is available at `services/pdf-translate-api`:
+- endpoint: `POST /translate/pdf`
+- purpose: upload PDF -> BabelDOC translation -> return downloadable translated/bilingual PDF
+- contract: `services/pdf-translate-api/openapi.yaml`
+
+Run it locally with Docker Compose:
+```bash
+copy services\pdf-translate-api\.env.example services\pdf-translate-api\.env
+docker compose -f docker-compose.translate.yml up --build
+```
+
+Service docs after startup:
+- `http://localhost:8080/docs`
+- `http://localhost:8080/openapi.json`
+
 ## Motion system
 The motion runtime is productized with a shared provider:
 - `components/motion/MotionProvider.tsx`: centralized motion state, quality control, auto degrade/upgrade logic, and feature switches.

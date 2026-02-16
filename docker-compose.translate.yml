@@ -1,0 +1,13 @@
+services:
+  pdf-translate-api:
+    build:
+      context: ./services/pdf-translate-api
+      dockerfile: Dockerfile
+    container_name: pdf-translate-api
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./services/pdf-translate-api/.env
+    volumes:
+      - ./services/pdf-translate-api/.tmp:/app/.tmp
+    restart: unless-stopped

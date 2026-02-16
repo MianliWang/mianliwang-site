@@ -1,0 +1,5 @@
+babeldoc
+fastapi
+pydantic-settings
+python-multipart
+uvicorn[standard]

@@ -55,6 +55,10 @@ export function ReadingHUD({
     let velocityY = 0;
     let targetProgress = 0;
     let currentProgress = 0;
+    let targetProgressLeft = 8;
+    let currentProgressLeft = targetProgressLeft;
+    let targetProgressWidth = window.innerWidth <= 768 ? 54 : 72;
+    let currentProgressWidth = targetProgressWidth;
     let animationFrameId = 0;
     let scheduleFrameId = 0;
 
@@ -62,7 +66,14 @@ export function ReadingHUD({
       marker.style.opacity = activeAnchor ? "1" : "0";
       marker.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
       root.style.setProperty("--reading-hud-progress", currentProgress.toFixed(4));
-      root.style.setProperty("--reading-hud-anchor-x", `${currentX.toFixed(1)}px`);
+      root.style.setProperty(
+        "--reading-hud-progress-left",
+        `${currentProgressLeft.toFixed(1)}px`,
+      );
+      root.style.setProperty(
+        "--reading-hud-progress-width",
+        `${currentProgressWidth.toFixed(1)}px`,
+      );
     };
 
     const updateProgressTarget = () => {
@@ -77,12 +88,46 @@ export function ReadingHUD({
 
       const scopeRect = scope.getBoundingClientRect();
       const anchorRect = activeAnchor.getBoundingClientRect();
-      const rightColumn = Math.round(scopeRect.right + 18);
-      const leftColumn = Math.round(scopeRect.left - 18);
-      const preferredColumn =
-        rightColumn <= window.innerWidth - 14 ? rightColumn : leftColumn;
-      targetX = clamp(preferredColumn, 12, window.innerWidth - 12);
-      targetY = clamp(Math.round(anchorRect.top), 14, window.innerHeight - 14);
+      const isMobile = window.innerWidth <= 768;
+      const markerOffset = isMobile ? 16 : 22;
+      const edgePadding = 6;
+      const dotRadius = isMobile ? 3 : 3.5;
+      const markerMinX = edgePadding + dotRadius;
+      const markerMaxX = window.innerWidth - edgePadding - dotRadius;
+      const leftGutter = Math.max(0, scopeRect.left);
+      const rightGutter = Math.max(0, window.innerWidth - scopeRect.right);
+      const canUseLeft = leftGutter >= markerOffset + dotRadius;
+      const canUseRight = rightGutter >= markerOffset + dotRadius;
+
+      let side: "left" | "right";
+      if (canUseRight && canUseLeft) {
+        side = rightGutter >= leftGutter ? "right" : "left";
+      } else if (canUseRight) {
+        side = "right";
+      } else {
+        side = "left";
+      }
+
+      const markerColumn =
+        side === "right" ? scopeRect.right + markerOffset : scopeRect.left - markerOffset;
+
+      targetX = clamp(Math.round(markerColumn), markerMinX, markerMaxX);
+      targetY = clamp(Math.round(anchorRect.top), 12, window.innerHeight - 12);
+
+      const preferredProgressWidth = isMobile ? 54 : 72;
+      const availableGutter = side === "right" ? rightGutter : leftGutter;
+      const maxProgressWidth = Math.max(4, Math.round(availableGutter - 2));
+      targetProgressWidth = Math.min(preferredProgressWidth, maxProgressWidth);
+
+      const progressLeftBase =
+        side === "right"
+          ? scopeRect.right + 2
+          : scopeRect.left - targetProgressWidth - 2;
+      targetProgressLeft = clamp(
+        Math.round(progressLeftBase),
+        0,
+        Math.max(0, window.innerWidth - targetProgressWidth),
+      );
     };
 
     const pickActiveAnchor = () => {
@@ -122,6 +167,8 @@ export function ReadingHUD({
         currentX = targetX;
         currentY = targetY;
         currentProgress = targetProgress;
+        currentProgressLeft = targetProgressLeft;
+        currentProgressWidth = targetProgressWidth;
         render();
         return;
       }
@@ -129,18 +176,25 @@ export function ReadingHUD({
       const spring = 0.18;
       const damping = 0.72;
       const progressFollow = 0.2;
+      const hudFollow = 0.24;
+      const hudWidthFollow = 0.28;
 
       velocityX = (velocityX + (targetX - currentX) * spring) * damping;
       velocityY = (velocityY + (targetY - currentY) * spring) * damping;
       currentX += velocityX;
       currentY += velocityY;
       currentProgress += (targetProgress - currentProgress) * progressFollow;
+      currentProgressLeft += (targetProgressLeft - currentProgressLeft) * hudFollow;
+      currentProgressWidth +=
+        (targetProgressWidth - currentProgressWidth) * hudWidthFollow;
       render();
 
       const stillMoving =
         Math.abs(targetX - currentX) > 0.16 ||
         Math.abs(targetY - currentY) > 0.16 ||
         Math.abs(targetProgress - currentProgress) > 0.002 ||
+        Math.abs(targetProgressLeft - currentProgressLeft) > 0.24 ||
+        Math.abs(targetProgressWidth - currentProgressWidth) > 0.24 ||
         Math.abs(velocityX) > 0.05 ||
         Math.abs(velocityY) > 0.05;
 
@@ -167,6 +221,8 @@ export function ReadingHUD({
         currentX = targetX;
         currentY = targetY;
         currentProgress = targetProgress;
+        currentProgressLeft = targetProgressLeft;
+        currentProgressWidth = targetProgressWidth;
         render();
         return;
       }

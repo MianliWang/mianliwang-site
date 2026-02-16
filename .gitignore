@@ -34,3 +34,8 @@ data/ama-messages.json
 Thumbs.db
 .vercel
 .turbo
+
+# python (fastapi service)
+__pycache__/
+*.py[cod]
+.venv/

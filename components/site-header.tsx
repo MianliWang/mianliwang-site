@@ -70,12 +70,10 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  buttonClassName("ghost"),
-                  "h-9 px-3 text-[0.76rem]",
-                  isActive &&
-                    "border-accent/35 bg-surface-2 text-accent shadow-[0_4px_12px_rgb(0_0_0/0.06)]",
-                  !isActive && "text-muted",
+                  buttonClassName("ghost", "ui-nav-item"),
+                  isActive && "text-accent",
                 )}
+                data-active={isActive ? "true" : "false"}
               >
                 <Icon size={14} aria-hidden="true" className="ui-follow-icon" />
                 <span>{item.label}</span>
