@@ -62,6 +62,7 @@ export function ReadingHUD({
       marker.style.opacity = activeAnchor ? "1" : "0";
       marker.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
       root.style.setProperty("--reading-hud-progress", currentProgress.toFixed(4));
+      root.style.setProperty("--reading-hud-anchor-x", `${currentX.toFixed(1)}px`);
     };
 
     const updateProgressTarget = () => {
@@ -76,7 +77,11 @@ export function ReadingHUD({
 
       const scopeRect = scope.getBoundingClientRect();
       const anchorRect = activeAnchor.getBoundingClientRect();
-      targetX = clamp(Math.round(scopeRect.left - 18), 12, window.innerWidth - 12);
+      const rightColumn = Math.round(scopeRect.right + 18);
+      const leftColumn = Math.round(scopeRect.left - 18);
+      const preferredColumn =
+        rightColumn <= window.innerWidth - 14 ? rightColumn : leftColumn;
+      targetX = clamp(preferredColumn, 12, window.innerWidth - 12);
       targetY = clamp(Math.round(anchorRect.top), 14, window.innerHeight - 14);
     };
 

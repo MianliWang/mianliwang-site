@@ -758,12 +758,14 @@ html.theme-transitioning .reading-hud-marker-dot {
   pointer-events: none;
   z-index: 26;
   --reading-hud-progress: 0;
+  --reading-hud-anchor-x: 50vw;
 }
 
 .reading-hud-progress {
   position: fixed;
-  top: calc(4.4rem + env(safe-area-inset-top, 0px));
-  right: clamp(0.65rem, 2vw, 1.1rem);
+  top: calc(5.5rem + env(safe-area-inset-top, 0px));
+  left: var(--reading-hud-anchor-x);
+  transform: translateX(-50%);
   width: 72px;
   height: 4px;
   border-radius: 999px;
@@ -817,7 +819,7 @@ html.theme-transitioning .reading-hud-marker-dot {
 @media (max-width: 768px) {
   .reading-hud-progress {
     width: 58px;
-    top: calc(4rem + env(safe-area-inset-top, 0px));
+    top: calc(4.7rem + env(safe-area-inset-top, 0px));
   }
 
   .reading-hud-marker-rail {
