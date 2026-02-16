@@ -6,6 +6,10 @@ import {
   AMA_NAME_MAX_LENGTH,
   type AmaMessage,
 } from "@/lib/ama/types";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useTranslations } from "next-intl";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 
@@ -106,66 +110,66 @@ export function AmaForm() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <form
+      <Card
+        as="form"
         onSubmit={handleSubmit}
-        className="space-y-4 rounded-2xl border border-surface-border bg-surface p-6"
+        className="space-y-4 p-6"
       >
         <label className="block space-y-2 text-sm">
           <span className="text-muted">{t("nameLabel")}</span>
-          <input
+          <Input
             type="text"
             name="name"
             required
             maxLength={AMA_NAME_MAX_LENGTH}
-            className="w-full rounded-xl border border-surface-border bg-background px-3 py-2 outline-none transition-colors focus:border-accent"
           />
         </label>
 
         <label className="block space-y-2 text-sm">
           <span className="text-muted">{t("emailLabel")}</span>
-          <input
+          <Input
             type="email"
             name="email"
             required
             maxLength={AMA_EMAIL_MAX_LENGTH}
-            className="w-full rounded-xl border border-surface-border bg-background px-3 py-2 outline-none transition-colors focus:border-accent"
           />
         </label>
 
         <label className="block space-y-2 text-sm">
           <span className="text-muted">{t("messageLabel")}</span>
-          <textarea
+          <Textarea
             name="message"
             required
             rows={6}
             maxLength={AMA_MESSAGE_MAX_LENGTH}
-            className="w-full resize-y rounded-xl border border-surface-border bg-background px-3 py-2 outline-none transition-colors focus:border-accent"
           />
         </label>
 
-        <button
+        <Button
           type="submit"
+          variant="primary"
           disabled={submitState === "submitting"}
-          className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-background transition-opacity disabled:cursor-not-allowed disabled:opacity-60"
+          className="min-w-[8.5rem]"
         >
           {submitState === "submitting" ? t("sending") : t("submit")}
-        </button>
+        </Button>
 
         <p className="text-sm text-muted" aria-live="polite">
           {feedback}
         </p>
-      </form>
+      </Card>
 
-      <section className="rounded-2xl border border-surface-border bg-surface p-6">
+      <Card as="section" className="p-6">
         <header className="mb-4 flex items-center justify-between gap-2">
           <h2 className="text-lg font-semibold">{t("listTitle")}</h2>
-          <button
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => void loadItems()}
-            className="rounded-full border border-surface-border px-3 py-1 text-xs font-medium text-muted transition-colors hover:border-accent hover:text-accent"
+            className="h-8 px-3 text-xs"
           >
             {t("refresh")}
-          </button>
+          </Button>
         </header>
 
         {isListLoading ? <p className="text-sm text-muted">{t("listLoading")}</p> : null}
@@ -182,7 +186,7 @@ export function AmaForm() {
             {items.map((item) => (
               <li
                 key={item.id}
-                className="rounded-xl border border-surface-border/80 bg-background p-3"
+                className="rounded-[var(--radius-soft)] border border-surface-border/80 bg-background p-3"
               >
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <span className="text-sm font-medium">{item.name}</span>
@@ -195,7 +199,7 @@ export function AmaForm() {
             ))}
           </ul>
         ) : null}
-      </section>
+      </Card>
     </div>
   );
 }

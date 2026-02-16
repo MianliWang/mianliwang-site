@@ -12,8 +12,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+function resolveMetadataBase() {
+  const fallback = "http://localhost:3000";
+  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL ?? fallback;
+
+  try {
+    return new URL(configuredUrl);
+  } catch {
+    return new URL(fallback);
+  }
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL("http://localhost:3000"),
+  metadataBase: resolveMetadataBase(),
   title: {
     default: "Mianli Wang",
     template: "%s | Mianli Wang",
@@ -31,8 +42,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initLocaleLangScript = `
+    (() => {
+      const segment = window.location.pathname.split("/")[1];
+      if (segment === "en" || segment === "zh") {
+        document.documentElement.lang = segment;
+      }
+    })();
+  `;
+
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: initLocaleLangScript }} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground antialiased`}
       >

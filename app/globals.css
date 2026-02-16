@@ -16,6 +16,20 @@
   --content-max: 74rem;
   --section-space: clamp(2.8rem, 7vw, 6rem);
   --container-inline: clamp(1rem, 3vw, 2rem);
+  --motion-duration-micro: 170ms;
+  --motion-duration-fast: 220ms;
+  --motion-duration-base: 280ms;
+  --motion-duration-slow: 360ms;
+  --motion-delay-follow: 54ms;
+  --motion-ease-standard: cubic-bezier(0.2, 0.78, 0.2, 1);
+  --motion-ease-soft: cubic-bezier(0.26, 0.66, 0.18, 1);
+  --motion-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-scale-hover: 1.006;
+  --motion-scale-press: 0.992;
+  --motion-lift-control: -1px;
+  --motion-lift-card: -2px;
+  --motion-shadow-hover: 0 12px 24px rgb(0 0 0 / 0.11);
+  --theme-transition-duration: 320ms;
 }
 
 @theme inline {
@@ -80,6 +94,35 @@ a {
   padding-inline: var(--container-inline);
   padding-bottom: clamp(3rem, 8vw, 6rem);
   padding-top: clamp(2rem, 5vw, 3rem);
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity var(--motion-duration-base) var(--motion-ease-soft),
+    transform var(--motion-duration-base) var(--motion-ease-soft);
+}
+
+html.locale-switching .site-main {
+  opacity: 0.84;
+  transform: translate3d(0, 2px, 0);
+}
+
+html.theme-transitioning body,
+html.theme-transitioning .site-header,
+html.theme-transitioning .site-main,
+html.theme-transitioning .ui-control,
+html.theme-transitioning .ui-toggle-group,
+html.theme-transitioning .ui-segmented,
+html.theme-transitioning .ui-segmented-pill,
+html.theme-transitioning .ui-segmented-item,
+html.theme-transitioning .ui-card,
+html.theme-transitioning .ui-field,
+html.theme-transitioning .reading-hud-progress,
+html.theme-transitioning .reading-hud-progress-fill,
+html.theme-transitioning .reading-hud-marker-rail,
+html.theme-transitioning .reading-hud-marker-dot {
+  transition-property: color, background-color, border-color, box-shadow, fill, stroke;
+  transition-duration: var(--theme-transition-duration);
+  transition-timing-function: var(--motion-ease-soft);
 }
 
 .page-stack {
@@ -130,6 +173,9 @@ a {
 }
 
 .ui-control {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   height: 2.3rem;
   align-items: center;
@@ -144,22 +190,57 @@ a {
   font-weight: 560;
   letter-spacing: 0.01em;
   line-height: 1;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.28),
+    0 2px 10px rgb(0 0 0 / 0.04);
   transition:
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 220ms ease,
-    background-color 220ms ease,
-    color 220ms ease,
-    box-shadow 220ms ease;
+    transform var(--motion-duration-fast) var(--motion-ease-spring),
+    border-color var(--motion-duration-base) ease,
+    background-color var(--motion-duration-base) ease,
+    color var(--motion-duration-micro) ease,
+    box-shadow var(--motion-duration-base) ease;
+}
+
+.ui-control::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    128deg,
+    rgb(255 255 255 / 0.24) 0%,
+    rgb(255 255 255 / 0.06) 38%,
+    transparent 72%
+  );
+  opacity: 0;
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard);
+}
+
+.dark .ui-control::after {
+  background: linear-gradient(
+    128deg,
+    rgb(255 255 255 / 0.18) 0%,
+    rgb(255 255 255 / 0.04) 38%,
+    transparent 72%
+  );
 }
 
 .ui-control:hover {
-  transform: translateY(-1px);
-  border-color: color-mix(in oklab, var(--accent) 34%, var(--surface-border) 66%);
+  transform: translate3d(0, var(--motion-lift-control), 0) scale(var(--motion-scale-hover));
+  border-color: color-mix(in oklab, var(--accent) 40%, var(--surface-border) 60%);
   background: color-mix(in oklab, var(--surface-2) 84%, var(--surface) 16%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.36),
+    var(--motion-shadow-hover);
+}
+
+.ui-control:hover::after {
+  opacity: 1;
 }
 
 .ui-control:active {
-  transform: translateY(0);
+  transform: scale(var(--motion-scale-press));
 }
 
 .ui-control:focus-visible {
@@ -184,6 +265,9 @@ a {
 .ui-control-primary:hover {
   background: color-mix(in oklab, var(--accent) 82%, black 18%);
   border-color: color-mix(in oklab, var(--accent) 84%, transparent 16%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.28),
+    0 12px 24px rgb(0 0 0 / 0.16);
 }
 
 .ui-control-secondary {
@@ -194,19 +278,126 @@ a {
   background: transparent;
 }
 
-.ui-toggle-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  border-radius: var(--radius-control);
+.ui-field {
+  width: 100%;
+  border-radius: var(--radius-soft);
   border: 1px solid color-mix(in oklab, var(--surface-border) 86%, transparent 14%);
-  padding: 0.18rem;
-  background: color-mix(in oklab, var(--surface) 88%, transparent 12%);
+  background: color-mix(in oklab, var(--surface) 92%, var(--background) 8%);
+  color: var(--foreground);
+  padding: 0.56rem 0.78rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  transition:
+    border-color var(--motion-duration-fast) ease,
+    box-shadow var(--motion-duration-fast) ease,
+    background-color var(--motion-duration-fast) ease;
 }
 
+.ui-field:hover {
+  border-color: color-mix(in oklab, var(--accent) 22%, var(--surface-border) 78%);
+}
+
+.ui-field:focus-visible {
+  outline: none;
+  border-color: color-mix(in oklab, var(--accent) 52%, var(--surface-border) 48%);
+  box-shadow:
+    0 0 0 2px color-mix(in oklab, var(--accent) 70%, transparent 30%),
+    0 0 0 4px color-mix(in oklab, var(--background) 88%, transparent 12%);
+}
+
+.ui-field:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.ui-field::placeholder {
+  color: color-mix(in oklab, var(--muted) 82%, transparent 18%);
+}
+
+.ui-field-textarea {
+  min-height: 6.8rem;
+  resize: vertical;
+}
+
+.ui-toggle-group {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  height: 2.3rem;
+  border-radius: var(--radius-control);
+  border: 1px solid color-mix(in oklab, var(--surface-border) 86%, transparent 14%);
+  padding: 0.2rem 0.26rem;
+  background: color-mix(in oklab, var(--surface) 88%, transparent 12%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.24),
+    0 1px 8px rgb(0 0 0 / 0.04);
+  transition:
+    border-color var(--motion-duration-fast) ease,
+    background-color var(--motion-duration-fast) ease,
+    box-shadow var(--motion-duration-base) ease;
+}
+
+.ui-toggle-group::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    120deg,
+    rgb(255 255 255 / 0.2) 0%,
+    rgb(255 255 255 / 0.05) 45%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard);
+}
+
+.ui-toggle-group:hover {
+  border-color: color-mix(in oklab, var(--accent) 34%, var(--surface-border) 66%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.3),
+    0 8px 18px rgb(0 0 0 / 0.09);
+}
+
+.ui-toggle-group:hover::after {
+  opacity: 1;
+}
+
+.ui-segmented {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  min-width: 6.6rem;
+  height: 1.88rem;
+  border-radius: var(--radius-control);
+  padding: 2px;
+  background: color-mix(in oklab, var(--surface-2) 82%, transparent 18%);
+}
+
+.ui-segmented-pill {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc((100% - 4px) / 2);
+  height: calc(100% - 4px);
+  border-radius: var(--radius-control);
+  border: 1px solid color-mix(in oklab, var(--accent) 44%, transparent 56%);
+  background: color-mix(in oklab, var(--accent) 82%, black 18%);
+  transform: translateX(calc(var(--segment-index, 0) * 100%));
+  transition: transform var(--motion-duration-base) var(--motion-ease-standard);
+}
+
+.ui-segmented-item,
 .ui-toggle-item {
   display: inline-flex;
-  height: 1.95rem;
+  position: relative;
+  z-index: 1;
+  height: 100%;
   min-width: 2.4rem;
   align-items: center;
   justify-content: center;
@@ -218,22 +409,28 @@ a {
   line-height: 1;
   color: var(--muted);
   transition:
-    border-color 180ms ease,
-    background-color 180ms ease,
-    color 180ms ease,
-    transform 180ms ease;
+    border-color var(--motion-duration-fast) ease,
+    background-color var(--motion-duration-fast) ease,
+    color var(--motion-duration-fast) ease,
+    transform var(--motion-duration-fast) var(--motion-ease-soft);
 }
 
+.ui-segmented-item:hover,
 .ui-toggle-item:hover {
   color: var(--foreground);
 }
 
+.ui-segmented-item-active {
+  color: color-mix(in oklab, var(--background) 95%, white 5%);
+}
+
 .ui-toggle-item-active {
   border-color: color-mix(in oklab, var(--accent) 44%, transparent 56%);
-  background: color-mix(in oklab, var(--accent) 84%, black 16%);
+  background: color-mix(in oklab, var(--accent) 86%, black 14%);
   color: color-mix(in oklab, var(--background) 94%, white 6%);
 }
 
+.ui-segmented-item:focus-visible,
 .ui-toggle-item:focus-visible {
   outline: none;
   box-shadow:
@@ -242,33 +439,85 @@ a {
 }
 
 .ui-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   border-radius: var(--radius-card);
   border: 1px solid color-mix(in oklab, var(--surface-border) 86%, transparent 14%);
   background: color-mix(in oklab, var(--surface) 94%, transparent 6%);
-  box-shadow: 0 2px 12px rgb(0 0 0 / 0.03);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.24),
+    0 2px 12px rgb(0 0 0 / 0.03);
 }
 
 .dark .ui-card {
-  box-shadow: 0 2px 12px rgb(0 0 0 / 0.22);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    0 2px 12px rgb(0 0 0 / 0.22);
 }
 
 .ui-card-interactive {
   transition:
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 220ms ease,
-    box-shadow 220ms ease,
-    background-color 220ms ease;
+    transform var(--motion-duration-fast) var(--motion-ease-spring),
+    border-color var(--motion-duration-base) ease,
+    box-shadow var(--motion-duration-base) ease,
+    background-color var(--motion-duration-base) ease;
+}
+
+.ui-card-interactive::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    130deg,
+    rgb(255 255 255 / 0.24) 0%,
+    rgb(255 255 255 / 0.06) 42%,
+    transparent 74%
+  );
+  opacity: 0;
+  transition: opacity var(--motion-duration-base) var(--motion-ease-standard);
+}
+
+.dark .ui-card-interactive::after {
+  background: linear-gradient(
+    130deg,
+    rgb(255 255 255 / 0.18) 0%,
+    rgb(255 255 255 / 0.05) 42%,
+    transparent 74%
+  );
 }
 
 .ui-card-interactive:hover {
-  transform: translateY(-3px);
-  border-color: color-mix(in oklab, var(--accent) 32%, var(--surface-border) 68%);
-  background: color-mix(in oklab, var(--surface-2) 86%, var(--surface) 14%);
-  box-shadow: 0 12px 26px rgb(0 0 0 / 0.08);
+  transform: translate3d(0, var(--motion-lift-card), 0) scale(1.004);
+  border-color: color-mix(in oklab, var(--accent) 36%, var(--surface-border) 64%);
+  background: color-mix(in oklab, var(--surface-2) 88%, var(--surface) 12%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.3),
+    0 12px 24px rgb(0 0 0 / 0.1);
+}
+
+.ui-card-interactive:hover::after {
+  opacity: 1;
 }
 
 .dark .ui-card-interactive:hover {
   box-shadow: 0 12px 28px rgb(0 0 0 / 0.34);
+}
+
+.ui-follow-icon {
+  transition:
+    transform var(--motion-duration-fast) var(--motion-ease-spring)
+      var(--motion-delay-follow),
+    color var(--motion-duration-micro) ease;
+}
+
+.ui-control:hover .ui-follow-icon,
+.ui-control:focus-visible .ui-follow-icon,
+.ui-card-interactive:hover .ui-follow-icon,
+.ui-toggle-group:hover .ui-follow-icon {
+  transform: translateX(1.9px);
 }
 
 .ambient-background {
@@ -503,57 +752,81 @@ a {
   opacity: 0.28;
 }
 
-.reading-guide-root {
+.reading-hud-root {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 24;
-  --reading-progress: 0;
+  z-index: 26;
+  --reading-hud-progress: 0;
 }
 
-.reading-guide-progress-track {
+.reading-hud-progress {
   position: fixed;
-  top: 50%;
-  right: 1rem;
-  width: 12px;
-  height: 98px;
-  transform: translateY(-50%);
-  border: 1px solid color-mix(in oklab, var(--foreground) 16%, transparent 84%);
+  top: calc(4.4rem + env(safe-area-inset-top, 0px));
+  right: clamp(0.65rem, 2vw, 1.1rem);
+  width: 72px;
+  height: 4px;
   border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--foreground) 16%, transparent 84%);
   background: color-mix(in oklab, var(--surface) 88%, transparent 12%);
   overflow: hidden;
 }
 
-.reading-guide-progress-fill {
+.reading-hud-progress-fill {
   position: absolute;
-  left: 2px;
-  right: 2px;
-  bottom: 2px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--accent) 68%, var(--foreground) 32%);
-  height: calc((100% - 4px) * var(--reading-progress));
+  inset: 0;
+  transform-origin: left center;
+  transform: scaleX(var(--reading-hud-progress));
+  background: color-mix(in oklab, var(--accent) 76%, var(--foreground) 24%);
 }
 
-.reading-guide-dot {
+.reading-hud-marker {
   position: fixed;
   top: 0;
   left: 0;
+  opacity: 0;
+  transform: translate3d(-120vw, -120vh, 0) translate(-50%, -50%);
+  will-change: transform, opacity;
+}
+
+.reading-hud-marker-rail {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 30px;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  background: color-mix(in oklab, var(--foreground) 20%, transparent 80%);
+}
+
+.reading-hud-marker-dot {
+  position: absolute;
+  left: 0;
+  top: 50%;
   width: 10px;
   height: 10px;
   border-radius: 999px;
-  background: color-mix(in oklab, var(--foreground) 92%, white 8%);
+  transform: translate(-50%, -50%);
+  background: color-mix(in oklab, var(--foreground) 95%, white 5%);
   box-shadow:
-    0 0 0 2px color-mix(in oklab, var(--background) 85%, transparent 15%),
-    0 2px 10px rgb(0 0 0 / 0.2);
-  transform: translate3d(-100vw, -100vh, 0) translate(-50%, -50%);
-  opacity: 0;
+    0 0 0 2px color-mix(in oklab, var(--background) 86%, transparent 14%),
+    0 3px 10px rgb(0 0 0 / 0.22);
 }
 
 @media (max-width: 768px) {
-  .reading-guide-progress-track {
-    right: 0.6rem;
-    width: 10px;
-    height: 84px;
+  .reading-hud-progress {
+    width: 58px;
+    top: calc(4rem + env(safe-area-inset-top, 0px));
+  }
+
+  .reading-hud-marker-rail {
+    height: 24px;
+  }
+
+  .reading-hud-marker-dot {
+    width: 9px;
+    height: 9px;
   }
 }
 
@@ -562,14 +835,27 @@ a {
     animation: none;
   }
 
+  .site-main {
+    transition: none;
+  }
+
   .ui-control,
   .ui-card-interactive,
-  .ui-toggle-item {
+  .ui-toggle-item,
+  .ui-segmented-item,
+  .ui-segmented-pill,
+  .ui-field,
+  .reading-hud-progress-fill,
+  .ui-follow-icon {
     transition: none;
   }
 
   .ui-control:hover,
   .ui-card-interactive:hover {
+    transform: none;
+  }
+
+  .ui-control:active {
     transform: none;
   }
 

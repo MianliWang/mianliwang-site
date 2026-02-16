@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+import { isIP } from "node:net";
 import { checkAmaRateLimit } from "@/lib/ama/rate-limit";
 import { createAmaMessage, listAmaMessages } from "@/lib/ama/storage";
 import {
@@ -16,21 +18,89 @@ type PostPayload = {
   message?: unknown;
 };
 
-function getClientIdentifier(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    const firstIp = forwarded.split(",")[0]?.trim();
-    if (firstIp) {
-      return firstIp;
+const TRUSTED_IP_HEADERS = [
+  "x-vercel-forwarded-for",
+  "cf-connecting-ip",
+  "x-real-ip",
+] as const;
+
+function normalizeIpToken(value: string): string | null {
+  const token = value.trim();
+  if (!token) {
+    return null;
+  }
+
+  const bracketedIpv6 = token.match(/^\[([^\]]+)\](?::\d+)?$/);
+  if (bracketedIpv6 && isIP(bracketedIpv6[1])) {
+    return bracketedIpv6[1];
+  }
+
+  if (isIP(token)) {
+    return token;
+  }
+
+  const ipv4WithPort = token.match(/^(\d{1,3}(?:\.\d{1,3}){3}):\d+$/);
+  if (ipv4WithPort && isIP(ipv4WithPort[1])) {
+    return ipv4WithPort[1];
+  }
+
+  return null;
+}
+
+function parsePossiblyForwardedHeader(value: string): string | null {
+  const candidates = value
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  for (let index = candidates.length - 1; index >= 0; index -= 1) {
+    const parsed = normalizeIpToken(candidates[index]);
+    if (parsed) {
+      return parsed;
     }
   }
 
-  const realIp = request.headers.get("x-real-ip")?.trim();
-  if (realIp) {
-    return realIp;
+  return null;
+}
+
+function buildFallbackIdentifier(request: Request): string {
+  const fingerprint = [
+    request.headers.get("user-agent") ?? "",
+    request.headers.get("accept-language") ?? "",
+    request.headers.get("sec-ch-ua-platform") ?? "",
+    request.headers.get("host") ?? "",
+  ].join("|");
+
+  const digest = createHash("sha256")
+    .update(fingerprint)
+    .digest("hex")
+    .slice(0, 20);
+
+  return `fp:${digest}`;
+}
+
+function getClientIdentifier(request: Request): string {
+  for (const header of TRUSTED_IP_HEADERS) {
+    const headerValue = request.headers.get(header);
+    if (!headerValue) {
+      continue;
+    }
+
+    const ip = parsePossiblyForwardedHeader(headerValue);
+    if (ip) {
+      return `ip:${ip}`;
+    }
   }
 
-  return "local";
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    const ip = parsePossiblyForwardedHeader(forwarded);
+    if (ip) {
+      return `ip:${ip}`;
+    }
+  }
+
+  return buildFallbackIdentifier(request);
 }
 
 function normalizeOneLine(value: string) {
@@ -46,13 +116,24 @@ function isValidEmail(value: string) {
 }
 
 export async function GET() {
-  const items = await listAmaMessages(50);
-  return NextResponse.json({ items });
+  try {
+    const items = await listAmaMessages(50);
+    return NextResponse.json({ items });
+  } catch (error) {
+    console.error("AMA list failed", error);
+    return NextResponse.json(
+      {
+        items: [],
+        error: "STORAGE_UNAVAILABLE",
+      },
+      { status: 503 },
+    );
+  }
 }
 
 export async function POST(request: Request) {
   const clientId = getClientIdentifier(request);
-  const limit = checkAmaRateLimit(clientId);
+  const limit = await checkAmaRateLimit(clientId);
   if (!limit.allowed) {
     return NextResponse.json(
       {
@@ -117,11 +198,23 @@ export async function POST(request: Request) {
     );
   }
 
-  const item = await createAmaMessage({
-    name,
-    email,
-    message,
-  });
+  let item: Awaited<ReturnType<typeof createAmaMessage>>;
+  try {
+    item = await createAmaMessage({
+      name,
+      email,
+      message,
+    });
+  } catch (error) {
+    console.error("AMA create failed", error);
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "STORAGE_UNAVAILABLE",
+      },
+      { status: 503 },
+    );
+  }
 
   return NextResponse.json(
     {

@@ -150,7 +150,7 @@ export function MotionProvider({
     spotlightEnabled &&
     (effectiveQuality === "high" || effectiveQuality === "medium");
   const readingGuideActive =
-    pointerSupported && readingGuideEnabled && effectiveQuality !== "off";
+    readingGuideEnabled && effectiveQuality !== "off";
 
   useEffect(() => {
     setPointerChannelActive("cursor", cursorActive);

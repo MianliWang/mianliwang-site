@@ -58,13 +58,101 @@
   "Toolbox": {
     "title": "Toolbox",
     "description": "Phase 1 includes clear UI placeholders for the first three tools.",
+    "entryLabel": "Tool Entry",
     "base64Title": "Base64",
     "base64Description": "Encode and decode text payloads.",
+    "base64Guide": "Draft converter",
     "textTitle": "Text Utilities",
     "textDescription": "Clean, format, and transform text snippets.",
+    "textGuide": "Draft editor",
     "docTitle": "Doc Translate",
     "docDescription": "Upload a document and review translated output.",
+    "docGuide": "Draft upload flow",
+    "openEntry": "Open entry",
     "comingSoon": "Coming soon"
+  },
+  "Writing": {
+    "eyebrow": "Writing",
+    "title": "Interface notes focused on reading flow.",
+    "description": "Process notes on restrained motion, visual rhythm, and clarity-first interaction patterns.",
+    "openArticle": "Read article",
+    "hudLabel": "Reading HUD",
+    "articles": [
+      {
+        "slug": "interaction-rhythm",
+        "eyebrow": "Interaction Notes",
+        "title": "Rhythm Before Decoration",
+        "summary": "Subtle delays and tiny movement can guide attention better than louder visual effects.",
+        "readingTime": "7 min read",
+        "intro": "Motion is only useful when it protects reading flow. Once animation starts competing with paragraph rhythm, the content loses priority.",
+        "sections": [
+          {
+            "title": "Keep motion measurable",
+            "paragraphs": [
+              "Micro-interactions work best when they are barely above perception threshold. A one-pixel lift can feel intentional without becoming ornamental.",
+              "Delayed icon motion is effective because it reinforces hierarchy. Text stabilizes first, then the icon confirms intent a fraction later.",
+              "A calm hover system should improve scan speed. If users remember the animation more than the label, the balance is wrong.",
+              "Treat every transition as a reading aid. It should clarify what changed, not advertise itself."
+            ]
+          },
+          {
+            "title": "Guide attention with one anchor",
+            "paragraphs": [
+              "Long pages need orientation, but they do not need decoration running through the full viewport.",
+              "A compact progress hint plus one high-contrast paragraph dot gives enough wayfinding for dense text.",
+              "IntersectionObserver is a practical trigger. It keeps activation logic stable while avoiding heavyweight scroll handlers.",
+              "When the active marker moves, interpolation should stay mild. The goal is continuity, not a dramatic chase effect."
+            ]
+          },
+          {
+            "title": "Design for reduced motion first",
+            "paragraphs": [
+              "Reduced motion is not a degraded experience. It is a different contract where state changes remain clear without animated travel.",
+              "Direct positioning can still communicate progress and active context, as long as contrast and spacing are reliable.",
+              "Keyboard users should get the same clarity as pointer users. Focus rings and semantic order remain the primary interaction language.",
+              "A crafted interface is one that remains legible under every preference mode."
+            ]
+          }
+        ]
+      },
+      {
+        "slug": "toolbox-handbook",
+        "eyebrow": "Tooling Notes",
+        "title": "Toolbox Entries as Interface Handbook",
+        "summary": "Utility cards should read like concise manual entries: what it is, what it does, and what to do next.",
+        "readingTime": "6 min read",
+        "intro": "A practical toolbox does not need loud visuals. It needs predictable structure and quick scan cues that reduce decision time.",
+        "sections": [
+          {
+            "title": "Write cards for scanning",
+            "paragraphs": [
+              "Each card should answer three questions immediately: what tool this is, what outcome it provides, and where the interaction starts.",
+              "A compact icon, short title, and single-line summary produce a reliable rhythm across tools.",
+              "Secondary guidance can be lightweight. A small uppercase hint works better than additional button clutter.",
+              "Consistency matters more than novelty. Repeated structure reduces cognitive load on return visits."
+            ]
+          },
+          {
+            "title": "Use one accent language",
+            "paragraphs": [
+              "Accents should indicate action priority, not decorate every surface.",
+              "Border highlight, faint surface sheen, and tiny elevation shifts are usually enough to signal interactivity.",
+              "When every element glows, none of them guide. Keep high-contrast states reserved for active selection and focus.",
+              "The same motion token set should drive cards, buttons, and nav so the interface feels coherent."
+            ]
+          },
+          {
+            "title": "Preserve maintainability",
+            "paragraphs": [
+              "Interaction polish should live in reusable primitives. Copy-pasting custom hover logic into pages makes drift inevitable.",
+              "Tokens for duration, easing, and delays keep craft consistent while still allowing local nuance.",
+              "Performance constraints are part of design quality. Avoid animations that force layout or repaint large regions.",
+              "The best toolbox UI is quiet, fast, and clear enough that users focus on work, not chrome."
+            ]
+          }
+        ]
+      }
+    ]
   },
   "AMA": {
     "title": "AMA",

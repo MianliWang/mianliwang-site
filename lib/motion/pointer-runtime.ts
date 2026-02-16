@@ -57,6 +57,7 @@ let running = false;
 let animationFrameId = 0;
 let fineHoverMedia: MediaQueryList | null = null;
 let reducedMotionMedia: MediaQueryList | null = null;
+let pointerListenersAttached = false;
 
 function notifyStateSubscribers() {
   stateSubscribers.forEach((subscriber) => {
@@ -66,6 +67,86 @@ function notifyStateSubscribers() {
 
 function hasActiveChannel() {
   return activeChannels.cursor || activeChannels.spotlight;
+}
+
+function handlePointerMove(event: PointerEvent) {
+  frame.pointerX = event.clientX;
+  frame.pointerY = event.clientY;
+  frame.visible = true;
+  resolveInteractiveTarget(event.target);
+}
+
+function handlePointerDown(event: PointerEvent) {
+  frame.pointerX = event.clientX;
+  frame.pointerY = event.clientY;
+  frame.pressed = true;
+  frame.visible = true;
+  resolveInteractiveTarget(event.target);
+}
+
+function handlePointerUpOrCancel() {
+  frame.pressed = false;
+}
+
+function handleWindowMouseOut(event: MouseEvent) {
+  if (event.relatedTarget === null) {
+    frame.visible = false;
+    frame.pressed = false;
+    frame.interactiveElement = null;
+    frame.interactiveKind = "default";
+  }
+}
+
+function handleWindowBlur() {
+  frame.visible = false;
+  frame.pressed = false;
+  frame.interactiveElement = null;
+  frame.interactiveKind = "default";
+}
+
+function attachPointerListeners() {
+  if (pointerListenersAttached || typeof window === "undefined") {
+    return;
+  }
+
+  pointerListenersAttached = true;
+
+  document.addEventListener("pointermove", handlePointerMove, {
+    passive: true,
+  });
+  document.addEventListener("pointerdown", handlePointerDown, {
+    passive: true,
+  });
+  document.addEventListener("pointerup", handlePointerUpOrCancel, {
+    passive: true,
+  });
+  document.addEventListener("pointercancel", handlePointerUpOrCancel, {
+    passive: true,
+  });
+  window.addEventListener("mouseout", handleWindowMouseOut, {
+    passive: true,
+  });
+  window.addEventListener("blur", handleWindowBlur);
+}
+
+function detachPointerListeners() {
+  if (!pointerListenersAttached || typeof window === "undefined") {
+    return;
+  }
+
+  pointerListenersAttached = false;
+
+  document.removeEventListener("pointermove", handlePointerMove);
+  document.removeEventListener("pointerdown", handlePointerDown);
+  document.removeEventListener("pointerup", handlePointerUpOrCancel);
+  document.removeEventListener("pointercancel", handlePointerUpOrCancel);
+  window.removeEventListener("mouseout", handleWindowMouseOut);
+  window.removeEventListener("blur", handleWindowBlur);
+
+  frame.visible = false;
+  frame.pressed = false;
+  frame.interactiveElement = null;
+  frame.interactiveKind = "default";
 }
 
 function tick(timestamp: number) {
@@ -92,6 +173,7 @@ function updateLoopState() {
     state.motionAllowed && hasActiveChannel() && frameSubscribers.size > 0;
 
   if (shouldRun && !running) {
+    attachPointerListeners();
     running = true;
     if (!animationFrameId) {
       animationFrameId = window.requestAnimationFrame(tick);
@@ -102,6 +184,9 @@ function updateLoopState() {
       window.cancelAnimationFrame(animationFrameId);
       animationFrameId = 0;
     }
+    detachPointerListeners();
+  } else if (!shouldRun) {
+    detachPointerListeners();
   }
 }
 
@@ -169,65 +254,6 @@ function initialize() {
 
   fineHoverMedia.addEventListener("change", updateStateFromMedia);
   reducedMotionMedia.addEventListener("change", updateStateFromMedia);
-
-  document.addEventListener(
-    "pointermove",
-    (event) => {
-      frame.pointerX = event.clientX;
-      frame.pointerY = event.clientY;
-      frame.visible = true;
-      resolveInteractiveTarget(event.target);
-    },
-    { passive: true },
-  );
-
-  document.addEventListener(
-    "pointerdown",
-    (event) => {
-      frame.pointerX = event.clientX;
-      frame.pointerY = event.clientY;
-      frame.pressed = true;
-      frame.visible = true;
-      resolveInteractiveTarget(event.target);
-    },
-    { passive: true },
-  );
-
-  document.addEventListener(
-    "pointerup",
-    () => {
-      frame.pressed = false;
-    },
-    { passive: true },
-  );
-
-  document.addEventListener(
-    "pointercancel",
-    () => {
-      frame.pressed = false;
-    },
-    { passive: true },
-  );
-
-  window.addEventListener(
-    "mouseout",
-    (event) => {
-      if (event.relatedTarget === null) {
-        frame.visible = false;
-        frame.pressed = false;
-        frame.interactiveElement = null;
-        frame.interactiveKind = "default";
-      }
-    },
-    { passive: true },
-  );
-
-  window.addEventListener("blur", () => {
-    frame.visible = false;
-    frame.pressed = false;
-    frame.interactiveElement = null;
-    frame.interactiveKind = "default";
-  });
 
   updateStateFromMedia();
 }

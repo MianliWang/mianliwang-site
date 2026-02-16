@@ -73,11 +73,11 @@ export default async function HomePage() {
         <div className="flex flex-wrap gap-3">
           <Link href="/projects" className={buttonClassName("primary")}>
             {t("primaryCta")}
-            <ArrowRight size={14} aria-hidden="true" />
+            <ArrowRight size={14} aria-hidden="true" className="ui-follow-icon" />
           </Link>
           <Link href="/toolbox" className={buttonClassName("secondary")}>
             {t("secondaryCta")}
-            <ArrowRight size={14} aria-hidden="true" />
+            <ArrowRight size={14} aria-hidden="true" className="ui-follow-icon" />
           </Link>
         </div>
       </section>
@@ -100,7 +100,7 @@ export default async function HomePage() {
                 className="grid gap-4 p-5"
               >
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-soft)] border border-surface-border bg-surface-2 text-accent">
-                  <Icon size={17} aria-hidden="true" />
+                  <Icon size={17} aria-hidden="true" className="ui-follow-icon" />
                 </div>
                 <div className="grid gap-2">
                   <h3 className="text-[1.03rem] font-semibold leading-snug tracking-tight">
@@ -114,7 +114,7 @@ export default async function HomePage() {
                 <div>
                   <Link href={project.href} className={buttonClassName("ghost", "px-0")}>
                     {t("primaryCta")}
-                    <ArrowRight size={14} aria-hidden="true" />
+                    <ArrowRight size={14} aria-hidden="true" className="ui-follow-icon" />
                   </Link>
                 </div>
               </Card>
@@ -141,7 +141,7 @@ export default async function HomePage() {
                 className="grid gap-4 p-5"
               >
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-soft)] border border-surface-border bg-surface-2 text-accent">
-                  <Icon size={17} aria-hidden="true" />
+                  <Icon size={17} aria-hidden="true" className="ui-follow-icon" />
                 </div>
                 <div className="grid gap-2">
                   <h3 className="text-[1.03rem] font-semibold leading-snug tracking-tight">
@@ -152,7 +152,7 @@ export default async function HomePage() {
                 <div>
                   <Link href={tool.href} className={buttonClassName("ghost", "px-0")}>
                     {t("toolAction")}
-                    <ArrowRight size={14} aria-hidden="true" />
+                    <ArrowRight size={14} aria-hidden="true" className="ui-follow-icon" />
                   </Link>
                 </div>
               </Card>

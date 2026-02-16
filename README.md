@@ -14,20 +14,41 @@ pnpm typecheck
 pnpm build
 ```
 
+## AMA storage
+AMA data storage supports two backends:
+- `file` (default): writes to `data/ama-messages.json`, good for local/dev.
+- `upstash`: shared Redis REST storage for multi-instance deployments.
+
+Set via `.env`:
+```bash
+AMA_STORAGE_BACKEND=file
+# or
+AMA_STORAGE_BACKEND=upstash
+AMA_RATE_LIMIT_BACKEND=memory
+# or
+AMA_RATE_LIMIT_BACKEND=upstash
+UPSTASH_REDIS_REST_URL=...
+UPSTASH_REDIS_REST_TOKEN=...
+AMA_UPSTASH_KEY=ama:messages
+AMA_UPSTASH_RATE_PREFIX=ama:rate
+```
+
 ## Motion system
 The motion runtime is productized with a shared provider:
 - `components/motion/MotionProvider.tsx`: centralized motion state, quality control, auto degrade/upgrade logic, and feature switches.
 - `components/motion/Cursor.tsx` + `components/motion/Spotlight.tsx`: share one pointer `requestAnimationFrame` loop via `lib/motion/pointer-runtime.ts`.
-- `components/motion/ReadingGuide.tsx`: consumes provider state so the guide is disabled when motion system is forced off.
+- `components/motion/ReadingHUD.tsx`: reading HUD with compact progress + active paragraph dot for article pages.
+- `components/motion/ReadingGuide.tsx`: compatibility wrapper around `ReadingHUD` for older demo pages.
 
 ### Quality modes
 Supported modes: `Auto`, `High`, `Medium`, `Low`, `Off`.
 
 - `Auto`: starts high, degrades step-by-step when average frame time stays high, upgrades slowly after sustained recovery.
 - `High/Medium/Low/Off`: manual override.
-- Pointer-based effects are forced off when:
+- Pointer-based effects (cursor/spotlight) are forced off when:
   - `prefers-reduced-motion: reduce`
   - coarse/touch pointer (no `pointer:fine` + `hover:hover`)
+- Reading HUD remains available without pointer support and degrades to direct positioning under reduced motion.
 
 ### Dev panel
 In development mode, a motion panel appears at bottom-right:

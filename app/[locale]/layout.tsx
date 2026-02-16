@@ -1,4 +1,6 @@
 import { AmbientBackground } from "@/components/layout/ambient-background";
+import { LocaleHtmlSync } from "@/components/locale-html-sync";
+import { DevFeatureFlagsPanel } from "@/components/motion/DevFeatureFlagsPanel";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { Providers } from "@/components/providers";
 import { SiteHeader } from "@/components/site-header";
@@ -39,6 +41,7 @@ export default async function LocaleLayout({
     <NextIntlClientProvider messages={messages}>
       <Providers>
         <MotionProvider enablePointerEffects={false}>
+          <LocaleHtmlSync />
           <AmbientBackground />
           <a
             href="#main-content"
@@ -52,6 +55,7 @@ export default async function LocaleLayout({
               {children}
             </main>
           </div>
+          <DevFeatureFlagsPanel />
         </MotionProvider>
       </Providers>
     </NextIntlClientProvider>
