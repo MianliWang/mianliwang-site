@@ -94,7 +94,13 @@ function higherQuality(current: AutoAdaptiveQuality): AutoAdaptiveQuality {
   return MOTION_QUALITY_ORDER[index + 1];
 }
 
-export function MotionProvider({ children }: { children: ReactNode }) {
+export function MotionProvider({
+  children,
+  enablePointerEffects = true,
+}: {
+  children: ReactNode;
+  enablePointerEffects?: boolean;
+}) {
   const cursorEnabled = useSyncExternalStore<boolean>(
     subscribeMotionSettings,
     () => isFeatureEnabled("cursor"),
@@ -134,8 +140,12 @@ export function MotionProvider({ children }: { children: ReactNode }) {
 
   const pointerSupported = runtime.fineHover && !runtime.reducedMotion;
   const cursorActive =
-    pointerSupported && cursorEnabled && effectiveQuality !== "off";
+    enablePointerEffects &&
+    pointerSupported &&
+    cursorEnabled &&
+    effectiveQuality !== "off";
   const spotlightActive =
+    enablePointerEffects &&
     pointerSupported &&
     spotlightEnabled &&
     (effectiveQuality === "high" || effectiveQuality === "medium");
@@ -275,11 +285,20 @@ export function MotionProvider({ children }: { children: ReactNode }) {
     if (runtime.reducedMotion) {
       return "prefers-reduced-motion";
     }
+    if (!enablePointerEffects) {
+      return "pointer effects disabled for current phase";
+    }
     if (qualityMode !== "auto") {
       return `manual-${qualityMode}`;
     }
     return autoReason;
-  }, [autoReason, qualityMode, runtime.fineHover, runtime.reducedMotion]);
+  }, [
+    autoReason,
+    enablePointerEffects,
+    qualityMode,
+    runtime.fineHover,
+    runtime.reducedMotion,
+  ]);
 
   const setFeature = useCallback(
     (feature: MotionFeature, enabled: boolean) => {

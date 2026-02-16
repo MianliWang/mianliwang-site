@@ -1,6 +1,9 @@
 "use client";
 
+import { buttonClassName } from "@/components/ui/button";
 import { Link, usePathname } from "@/i18n/navigation";
+import { cn } from "@/lib/cn";
+import { BookOpen, House, MessageCircle, FolderKanban, Wrench } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "./language-switcher";
 import { ThemeToggle } from "./theme-toggle";
@@ -10,38 +13,51 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: "/", label: t("home") },
-    { href: "/projects", label: t("projects") },
-    { href: "/reading", label: t("reading") },
-    { href: "/toolbox", label: t("toolbox") },
-    { href: "/ama", label: t("ama") },
+    { href: "/", label: t("home"), icon: House },
+    { href: "/projects", label: t("projects"), icon: FolderKanban },
+    { href: "/reading", label: t("reading"), icon: BookOpen },
+    { href: "/toolbox", label: t("toolbox"), icon: Wrench },
+    { href: "/ama", label: t("ama"), icon: MessageCircle },
   ] as const;
 
   return (
-    <header className="sticky top-0 z-30 border-b border-surface-border/80 bg-background/90 backdrop-blur-sm">
-      <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="text-base font-semibold tracking-tight">
-          Mianli Wang
+    <header className="sticky top-0 z-30 border-b border-surface-border/70 bg-background/78 backdrop-blur-xl">
+      <div className="mx-auto flex w-full max-w-[var(--content-max)] flex-wrap items-center justify-between gap-3 px-[var(--container-inline)] py-4">
+        <Link href="/" className="inline-flex items-baseline gap-2">
+          <span className="text-[0.74rem] font-semibold uppercase tracking-[0.22em] text-muted">
+            MW
+          </span>
+          <span className="text-[0.98rem] font-semibold tracking-tight">
+            Mianli Wang
+          </span>
         </Link>
-        <nav className="flex items-center gap-1" aria-label={t("mainNav")}>
+
+        <nav className="flex flex-wrap items-center gap-1.5" aria-label={t("mainNav")}>
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const Icon = item.icon;
+            const isActive =
+              pathname === item.href ||
+              (item.href !== "/" && pathname.startsWith(item.href));
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-full px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${
-                  isActive
-                    ? "bg-surface text-foreground"
-                    : "text-muted hover:text-foreground"
-                }`}
+                className={cn(
+                  buttonClassName("ghost"),
+                  "h-9 px-3 text-[0.76rem]",
+                  isActive &&
+                    "border-accent/35 bg-surface-2 text-foreground shadow-[0_4px_12px_rgb(0_0_0/0.06)]",
+                  !isActive && "text-muted",
+                )}
               >
-                {item.label}
+                <Icon size={14} aria-hidden="true" />
+                <span>{item.label}</span>
               </Link>
             );
           })}
         </nav>
+
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
           <ThemeToggle />

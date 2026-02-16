@@ -1,5 +1,7 @@
 "use client";
 
+import { buttonClassName } from "@/components/ui/button";
+import { MoonStar, SunMedium } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 
@@ -9,11 +11,7 @@ export function ThemeToggle() {
 
   if (!resolvedTheme) {
     return (
-      <button
-        type="button"
-        disabled
-        className="rounded-full border border-surface-border px-3 py-1.5 text-xs text-muted"
-      >
+      <button type="button" disabled className={buttonClassName("secondary")}>
         {t("theme")}
       </button>
     );
@@ -28,9 +26,10 @@ export function ThemeToggle() {
       type="button"
       onClick={() => setTheme(nextTheme)}
       aria-label={label}
-      className="rounded-full border border-surface-border bg-surface px-3 py-1.5 text-xs font-medium transition-colors hover:border-accent hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+      className={buttonClassName("secondary")}
     >
-      {isDark ? t("darkShort") : t("lightShort")}
+      {isDark ? <SunMedium size={13} aria-hidden="true" /> : <MoonStar size={13} aria-hidden="true" />}
+      <span>{isDark ? t("darkShort") : t("lightShort")}</span>
     </button>
   );
 }

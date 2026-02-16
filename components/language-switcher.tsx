@@ -2,6 +2,8 @@
 
 import { usePathname, useRouter } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
+import { cn } from "@/lib/cn";
+import { Globe2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 
@@ -24,18 +26,15 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <div
-      className="inline-flex rounded-full border border-surface-border bg-surface p-1"
-      role="group"
-      aria-label={t("language")}
-    >
+    <div className="ui-toggle-group" role="group" aria-label={t("language")}>
+      <span className="px-1 text-muted" aria-hidden="true">
+        <Globe2 size={13} />
+      </span>
       <button
         type="button"
         onClick={() => changeLocale("en")}
         disabled={isPending}
-        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${
-          locale === "en" ? "bg-accent text-background" : "text-muted"
-        }`}
+        className={cn("ui-toggle-item", locale === "en" && "ui-toggle-item-active")}
       >
         EN
       </button>
@@ -43,9 +42,7 @@ export function LanguageSwitcher() {
         type="button"
         onClick={() => changeLocale("zh")}
         disabled={isPending}
-        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${
-          locale === "zh" ? "bg-accent text-background" : "text-muted"
-        }`}
+        className={cn("ui-toggle-item", locale === "zh" && "ui-toggle-item-active")}
       >
         中文
       </button>

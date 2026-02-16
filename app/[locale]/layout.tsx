@@ -1,9 +1,7 @@
+import { AmbientBackground } from "@/components/layout/ambient-background";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import { Providers } from "@/components/providers";
 import { SiteHeader } from "@/components/site-header";
-import { Cursor } from "@/components/motion/Cursor";
-import { DevFeatureFlagsPanel } from "@/components/motion/DevFeatureFlagsPanel";
-import { MotionProvider } from "@/components/motion/MotionProvider";
-import { Spotlight } from "@/components/motion/Spotlight";
 import { routing } from "@/i18n/routing";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import {
@@ -40,22 +38,17 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider messages={messages}>
       <Providers>
-        <MotionProvider>
-          <Spotlight />
-          <Cursor />
-          <DevFeatureFlagsPanel />
+        <MotionProvider enablePointerEffects={false}>
+          <AmbientBackground />
           <a
             href="#main-content"
             className="sr-only z-50 rounded-md bg-surface px-4 py-2 text-sm font-medium focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             {t("skipToContent")}
           </a>
-          <div className="min-h-screen">
+          <div className="site-chrome min-h-screen">
             <SiteHeader />
-            <main
-              id="main-content"
-              className="mx-auto w-full max-w-5xl px-4 pb-16 pt-10 sm:px-6 lg:px-8"
-            >
+            <main id="main-content" className="site-main">
               {children}
             </main>
           </div>
