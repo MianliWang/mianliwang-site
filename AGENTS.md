@@ -1,210 +1,291 @@
-# AGENTS.md — Personal Site + Toolbox (Next.js App Router)
+# AGENTS.md — Personal site + Toolbox (Next.js / App Router)
 
-Owner: Mianli Wang
-Project: personal site with high-craft UI + a small toolbox of useful utilities.
-
----
-
-## 0) What success looks like (non-negotiables)
-- A personal site with high-craft UI details (inspired by Rauno / Devouring Details), simplified and maintainable.
-- Layout / IA close to Brian Lovin’s site structure (clear sections, strong hierarchy).
-- Subtle “breathing” background like antfu (ambient, low contrast, never distracting).
-- Slightly larger typography for readability (Jason Santa Maria vibe).
-- Smooth interactions like Josh Comeau (polish + clarity).
-- Must include:
-  - Light/dark mode toggle (system + manual)
-  - Bilingual (ZH/EN) with language switch
-  - Basic visitor interaction (AMA / message)
-  - Toolbox section (Base64, text utilities, doc translate UI in phase 1)
-- No SEO work beyond basic metadata/OG. No keyword chasing.
+> Prime directive:
+> 1) Understand THIS repo first (tokens, components, motion, content pipeline).
+> 2) Then borrow patterns from references.
+> 3) Never do blind rewrites.
 
 ---
 
-## 1) Tech stack (phase 1)
-- Next.js (App Router) + React + TypeScript
-- Styling: Tailwind CSS v4 + CSS variables for theming
-- Theme: next-themes (system + toggle)
-- i18n: prefer `next-intl` (App Router friendly)
-- Motion:
-  - Prefer CSS (transform/opacity/filter) + requestAnimationFrame for pointer-tracking
-  - Framer Motion allowed ONLY when it clearly improves choreography; do not make it a hard dependency for everything
-- No WebGPU/WebGL in phase 1 unless proven necessary.
+## 0) Repo Reality (read this first)
+This repo is already:
+- Next.js (App Router) + React + TypeScript + Tailwind v4 + next-intl + next-themes
+- Locale prefix routing: `/en`, `/zh`
+- Has a motion/background system (rAF, IntersectionObserver, ambient background, starfield renderer with capability gating)
+- Has a toolbox framework + several tools (Base64/Text/Translate/PDF translate proxy)
+- Has server routes for AMA + Translate
+
+Codex MUST NOT assume a fresh template. Work with what exists.
 
 ---
 
-## 2) Repository conventions
-- Package manager: pnpm
-- Lockfile is mandatory: commit `pnpm-lock.yaml`
-- Use strict TypeScript, keep components small, avoid over-abstraction.
-- Avoid heavy UI libraries that fight custom design.
-- Keep all pointer/scroll effects isolated and easy to disable.
-
-Recommended structure:
-- `app/` routes + pages
-- `components/` UI building blocks
-- `components/motion/` pointer + scroll systems (easy to disable for reduced motion)
-- `lib/` utilities (formatters, base64, translate client wrappers, etc.)
-- `messages/` i18n dictionaries (`en.json`, `zh.json`)
-- `public/` static assets (grain textures, etc.)
+## 1) What success looks like (non-negotiables)
+- High-craft UI details (Rauno-ish) but simplified, maintainable.
+- IA / structure close to Brian Lovin: clear sections, strong hierarchy.
+- Subtle “breathing” background (ambient, low contrast, never distracting).
+- Slightly larger typography for readability (Jason Santa Maria vibe), CJK-friendly.
+- Interaction polish like Josh Comeau: clear and consistent.
+- Must include: light/dark toggle, locale switch, basic visitor interactions (AMA), Toolbox section.
+- SEO is not a priority beyond correct metadata / OG basics.
 
 ---
 
-## 3) Commands (Codex must use these)
-- Install: `pnpm install`
-- Dev: `pnpm dev`
-- Lint: `pnpm lint`
-- Typecheck: `pnpm typecheck` (or `pnpm tsc -p .`)
-- Build: `pnpm build`
-- Start (prod): `pnpm start`
+## 2) Operating rules for Codex (workflow)
+### 2.1 Always start with a Repo Understanding Report
+Before any non-trivial change, produce a short report:
+- Router map (pages + API routes)
+- Where design tokens live + how they’re applied
+- UI primitives inventory (Button/Card/Input etc.)
+- Motion/background architecture + feature flags + reduced-motion handling
+- Content pipeline (writing/projects data source + i18n)
+- Env vars used + production risks
+Then propose a small PR plan.
 
-Definition of Done (for any PR-sized change):
-- `pnpm lint` + `pnpm typecheck` pass
-- `pnpm build` passes
-- No obvious animation jank (scroll + pointer move stays smooth)
-- Respects prefers-reduced-motion
-
----
-
-## 4) Design references (what to borrow)
-Primary:
-- Rauno craft demos: micro-interactions, spatial tooltips, natural focus/keyboard navigation.
-- Devouring Details: progress/scroll affordances + “high-contrast dot” paragraph guidance (BUT: no full-height line across the screen).
-
-Secondary:
-- Brian Lovin: overall architecture & sectioning.
-- antfu: ambient background “breathing” (subtle).
-- Jason Santa Maria: larger type scale & comfortable reading.
-- Josh Comeau: interactive polish.
-
-Links:
-- Rauno craft: https://rauno.me/craft
-- Rauno interfaces repo: https://github.com/raunofreiberg/interfaces
-- Devouring Details: https://devouringdetails.com/
-- Brian Lovin: https://brianlovin.com/
-- antfu: https://antfu.me/
-- Jason Santa Maria: https://jasonsantamaria.com/
-- Josh Comeau: https://www.joshwcomeau.com/
-- Brittany Chiang (spotlight vibe): https://brittanychiang.com/
-
----
-
-## 5) Interaction specs (make it feel right)
-
-### 5.1 Cursor system (desktop only)
-- Use a circular “iPad-like” cursor.
-- Cursor has 2 layers:
-  1) small core dot (high contrast)
-  2) larger soft halo (very subtle)
-- On interactive elements (links/buttons/cards):
-  - cursor smoothly morphs (scale + opacity)
-  - can “snap” toward element center with spring-like easing (subtle, not gimmicky)
-- On touch devices: disable custom cursor; fall back to native.
-
-### 5.2 Spotlight / light projection (desktop)
-- A soft radial spotlight follows the cursor (like Brittany Chiang).
-- Must avoid visible gradient banding:
-  - Do NOT rely on large CSS masks fading to near-black
-  - Prefer a subtle noise/grain texture layer (e.g., a tiny tiled PNG) OR grainy gradient technique
-- Spotlight intensity is low; it should never overpower content.
-
-### 5.3 Scroll progress + paragraph guidance (Devouring Details-inspired)
-- Provide a progress indicator that responds to scroll.
-- When user scrolls into a section/paragraph, move a single high-contrast dot to the paragraph start.
-- Do NOT draw a single long line spanning the entire viewport height.
-- Keep it minimal, elegant, information-bearing.
-
-### 5.4 Spatial tooltips + image tab focus
-- Tooltips should feel “spatial” (anchored, smart offset, no jitter).
-- Keyboard navigation should move focus naturally across interactive clusters.
-- In image/tab UI, focus movement should feel smooth and intentional (no jumpy layout shift).
-
-### 5.5 Accessibility & motion preferences
-- Respect `prefers-reduced-motion`:
-  - disable cursor morphing, heavy transitions, and rAF-driven parallax
-- Ensure keyboard navigation is first-class:
-  - visible focus rings
-  - logical tab order
-  - skip-to-content link on top
-- Ensure color contrast is acceptable in both themes.
-
----
-
-## 6) Bilingual (ZH/EN) requirements
-- Support `zh` and `en`.
-- Must provide a visible language switch.
-- Preferred routing:
-  - `/zh/...` and `/en/...` (locale prefix)
-- Default:
-  - use system language on first visit, remember user choice.
-- All nav labels, headings, and key UI strings must be localized.
-- Content can be partially localized in phase 1; but UI must be complete.
-
----
-
-## 7) Toolbox (phase 1 scope)
-- Tools are “apps” with clear UI; users do NOT write arbitrary Python code.
-- Phase 1 tools:
-  - Base64 encode/decode
-  - Text utilities (format/clean, etc.)
-  - Document translation UI (file upload → server/API → translated output)
-- Later (phase 2/3; do not implement now):
-  - P2P transfer (wormhole-like)
-  - Personal video calling (high quality)
-  - mzML viewer (separate project for now)
-
----
-
-## 8) API / backend strategy
-- Phase 1:
-  - Keep simple visitor interactions (AMA/message) as Next.js Route Handlers in `app/api/.../route.ts`
-  - Avoid heavy infra; use a simple storage strategy (to be decided when implementing)
-- Phase 2:
-  - Add separate FastAPI service for heavier processing (translation pipelines, data processing)
-- Never introduce complex infra (TURN server, WebRTC signaling, auth) in phase 1.
-
----
-
-## 9) Performance rules (hard constraints)
-- Pointer-follow effects:
-  - use one `requestAnimationFrame` loop + CSS variables
-  - animate only `transform` / `opacity` / `filter` (avoid layout thrash)
-  - avoid expensive blur/shadow animations on large surfaces
-- Keep main thread light during scroll:
-  - prefer IntersectionObserver for section detection
-  - avoid scroll listeners that do heavy work
-- Avoid gradient banding in dark UI:
-  - prefer grain/noise overlay
-- Use Next.js Image component for images; avoid layout shift.
-- Ensure 60fps baseline; target high refresh displays by keeping paint costs low.
-
----
-
-## 10) Dependency strategy (avoid conflicts, stay modern)
-- Keep versions modern but stable; lock with pnpm lockfile.
-- Prefer a small dependency surface.
-- If adding a library:
-  - justify why it’s needed
-  - ensure it doesn’t fight custom design
-  - ensure it doesn’t add significant runtime cost
-
----
-
-## 11) Codex environment expectations
-- Codex should run:
-  - `pnpm install`
-  - `pnpm dev`
+### 2.2 Constraints
+- No framework swaps unless explicitly requested.
+- No “big-bang refactor”. Prefer small PRs.
+- Keep existing conventions (naming, file structure, tokens).
+- Every PR must pass:
   - `pnpm lint`
   - `pnpm typecheck`
   - `pnpm build`
-- If Codex environment blocks network, enable proxy network access.
-- Enable container cache to speed up repeated installs.
 
 ---
 
-## 12) References (implementation / docs)
-- OpenAI Codex: AGENTS.md guide — https://developers.openai.com/codex/guides/agents-md/
-- Next.js App Router docs — https://nextjs.org/docs
-- Next.js Image (App Router) — https://nextjs.org/docs/app/api-reference/components/image
-- next-themes — https://github.com/pacocoursey/next-themes
-- Grainy gradients idea — https://css-tricks.com/grainy-gradients/
-- Vercel Web Interface Guidelines — https://vercel.com/design/guidelines
+## 3) Tech stack (current phase)
+- Next.js (App Router) + React + TypeScript
+- Styling: Tailwind v4 + CSS variables tokens
+- i18n: next-intl (locale prefix)
+- Theme: next-themes (system + toggle)
+- Motion:
+  - Prefer CSS (transform/opacity/filter) + rAF only when needed
+  - Framer Motion allowed only for choreographed transitions that are hard in CSS
+- No WebGPU/WebGL requirements in phase 1 (but keep capability gates for optional background renderer)
+
+---
+
+## 4) Commands (Codex must use these)
+- Install: `pnpm install`
+- Dev: `pnpm dev`
+- Lint: `pnpm lint`
+- Typecheck: `pnpm typecheck`
+- Build: `pnpm build`
+- Start: `pnpm start`
+
+Definition of Done for any PR-sized change:
+- lint/typecheck/build all pass
+- no obvious scroll/pointer jank
+- reduced-motion remains usable
+- EN/ZH + light/dark all look coherent
+
+---
+
+## 5) Design tokens + typography system
+### 5.1 Token source of truth
+- Tokens live in `app/globals.css` (CSS variables + Tailwind v4 `@theme inline`)
+- Do NOT introduce a separate token system.
+
+### 5.2 Type system (CJK-friendly)
+- Define a clear hierarchy:
+  - Display / H1 / H2 / H3
+  - Body / Small / Caption
+- Line-height must be comfortable for both EN and ZH (avoid cramped CJK).
+- Use `font-feature-settings` / `text-rendering` carefully; avoid “over-smoothing”.
+
+### 5.3 Layout rhythm
+- Use a content max width token (e.g., `--content-max`) and consistent section spacing.
+- Establish “surface levels”:
+  - background
+  - surface-1 (cards)
+  - surface-2 (hovered/raised)
+  - overlay (menus/tooltips)
+- Use ONE global accent color for:
+  - primary buttons
+  - active nav
+  - focus ring
+No rainbow UI.
+
+### 5.4 Component consistency
+Nav / Buttons / Toggles / Inputs must share:
+- hover
+- active
+- focus-visible
+- disabled
+- pressed/selected (for toggles)
+
+---
+
+## 6) Background system (must feel alive, but subtle)
+Goal: breathing ambient background with low distraction and low banding.
+
+### 6.1 Layered background (home + global)
+Use 3 layers:
+1) Base gradient (stable)
+2) 2–3 huge radial blobs drifting VERY slowly (40–90s)
+   - tiny position shift, tiny hue shift
+   - no flashing
+3) Grain/noise overlay (very low opacity) to reduce banding
+
+Reduced motion:
+- `prefers-reduced-motion: reduce` => stop drifting; keep base + grain only.
+
+### 6.2 Performance
+- Blob animation must be transform-only.
+- Grain should be a static image or CSS noise pattern (low opacity).
+- Keep paints cheap; avoid animating large box-shadows.
+
+---
+
+## 7) Interaction / motion policy (phase gating)
+### Phase A: “craft baseline”
+- Make hover/active/focus consistent everywhere.
+- Make theme + locale switching feel smooth (not abrupt).
+- No custom cursor/spotlight in Phase A (unless explicitly enabled later).
+
+### Phase B: “Rauno-ish choreography”
+- Add spatial transitions (menus/tooltips, toggles, HUD)
+- Add scroll-linked reading HUD refinements (no overlap)
+- Still respect reduced-motion as a first-class contract
+
+### Theme/Locale transitions
+- Switching theme/locale should NOT “hard jump”.
+- Use:
+  - short crossfade on background layer
+  - subtle content fade/translate (small distance)
+  - preserve layout stability (no reflow flashes)
+
+---
+
+## 8) Content system / blog pipeline (bilingual)
+### 8.1 Current state (do not break)
+- Writing content is stored in `messages/en.json` and `messages/zh.json`.
+- Pages read those dictionaries.
+
+### 8.2 How the user adds content TODAY (must keep simple)
+#### Add a blog post (current pipeline)
+1) Add an article entry to `messages/en.json` under `Writing.articles`
+2) Add the same `slug` entry to `messages/zh.json`
+3) Ensure slug unique, sections non-empty
+4) Verify `pnpm build`
+
+#### Add / edit projects
+- Projects should follow the same model as Writing:
+  - keep a data list in `messages/*.json` (Phase A),
+  - and render cards from that list.
+
+### 8.3 Future content pipeline upgrade (optional, later)
+If/when migrating to MDX, propose a minimal bilingual structure:
+- `content/writing/<slug>.en.mdx`
+- `content/writing/<slug>.zh.mdx`
+- typed frontmatter (title/date/tags/summary)
+- build-time index generation
+Candidates:
+- Contentlayer or a lightweight MDX loader
+- remark/rehype plugins for headings, code blocks, math, etc.
+
+Do NOT implement migration unless explicitly requested. Provide a plan first.
+
+---
+
+## 9) Toolbox scope
+### Phase A
+- Base64 encode/decode
+- Text utilities (format/clean)
+- Text translate UI (server API)
+- PDF translate UI (proxy to FastAPI service)
+
+### Later (do NOT implement now)
+- P2P transfer (wormhole-like)
+- Personal video calling
+- mzML viewer (separate project)
+
+Toolbox rule:
+- Users do NOT write arbitrary code.
+- All tools must be “product UI” with guardrails.
+
+---
+
+## 10) Backend strategy (sane defaults)
+- Phase A: Next.js Route Handlers for lightweight features
+- Use Upstash for production-safe persistence + rate limiting
+- Never rely on file writes in serverless production
+- Phase B/C: separate FastAPI for heavy processing (PDF translate/BabelDOC pipeline)
+
+---
+
+## 11) Performance rules (hard constraints)
+- Use rAF + CSS variables for pointer/scroll effects
+- Animate only `transform` / `opacity` / `filter`
+- Use IntersectionObserver (avoid scroll listeners when possible)
+- Respect `prefers-reduced-motion`
+- Avoid gradient banding (grain overlay + gentle contrast)
+- Avoid heavy effects on large surfaces
+
+Optional “quality scaling” (nice-to-have):
+- Detect low FPS / low cores / save-data => reduce blob count, stop extra effects
+
+---
+
+## 12) Accessibility (non-negotiable)
+- Keyboard navigation first-class
+- `:focus-visible` must be clear and consistent
+- No motion-only affordances
+- Reduced-motion is a separate design contract, not a broken version
+
+---
+
+## 13) Reference repos / sources (high signal)
+> Codex should copy PATTERNS, not wholesale aesthetics.
+
+### 13.1 Bento layout / card interaction / templates
+- https://github.com/magicuidesign/magicui (motion-ready UI blocks; bento grid patterns)
+- https://github.com/shadcn-ui/ui (primitives, composable UI patterns)
+- https://github.com/braydoncoyer/braydoncoyer.dev (Next.js portfolio patterns)
+- https://github.com/brianlovin/briOS (information architecture / sections)
+- https://github.com/ArjunAranetaCodes/Next-JS-Portfolio-Bento-Template (bento portfolio starter)
+- https://github.com/mkhoirulwafa18/bentofolio (bento portfolio variant)
+
+### 13.2 Content system / blog pipeline (MDX / plugins)
+- https://github.com/timlrx/tailwind-nextjs-starter-blog (battle-tested blog pipeline)
+- https://github.com/mdx-js/mdx (MDX core)
+- https://github.com/remarkjs/remark (remark ecosystem)
+- https://github.com/rehypejs/rehype (rehype ecosystem)
+- https://github.com/contentlayerdev/contentlayer (typed content pipeline option)
+Suggested plugin set (choose minimally):
+- remark-gfm, remark-breaks
+- rehype-slug, rehype-autolink-headings
+- shiki/rehype-pretty-code (for code highlighting)
+
+### 13.3 Motion / choreography / spatial transitions
+- Rauno interfaces guidelines: https://github.com/raunofreiberg/interfaces
+- Floating UI (tooltips/menus positioning & interactions): https://github.com/floating-ui/floating-ui
+- react-spring (springs): https://github.com/pmndrs/react-spring
+- use-gesture (pointer/drag gestures): https://github.com/pmndrs/use-gesture
+- Radix primitives (accessible overlays): https://github.com/radix-ui/primitives
+Optional (only if needed):
+- Framer Motion: https://github.com/framer/motion
+
+### 13.4 Inspiration targets (do not clone blindly)
+- Rauno craft demos (micro interactions + spatial tooltips)
+- Devouring Details (reading guidance + progress affordances)
+- antfu.me (ambient background)
+- Josh Comeau (interaction polish)
+- Brittany Chiang (spotlight concept — later phase)
+- Jason Santa Maria (readability + typographic confidence)
+
+---
+
+## 14) Versioning policy (dependencies)
+- Prefer stable, recent minor versions.
+- Keep majors pinned; avoid uncontrolled major bumps.
+- Use pnpm lockfile as the source of truth.
+- Add `engines` / `.nvmrc` once Node baseline is decided (prevent drift).
+
+---
+
+## 15) PR acceptance checklist
+- lint/typecheck/build pass
+- EN/ZH and light/dark verified
+- reduced-motion verified
+- hover/active/focus consistent
+- no “mystery dots” / debug markers in production UI

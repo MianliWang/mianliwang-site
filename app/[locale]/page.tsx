@@ -2,6 +2,7 @@ import { buttonClassName } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Link } from "@/i18n/navigation";
+import { cn } from "@/lib/cn";
 import {
   ArrowRight,
   Braces,
@@ -24,6 +25,8 @@ export default async function HomePage() {
       meta: t("projectOneMeta"),
       icon: FolderKanban,
       href: "/projects",
+      layout: "feature",
+      order: "01",
     },
     {
       title: t("projectTwoTitle"),
@@ -31,6 +34,8 @@ export default async function HomePage() {
       meta: t("projectTwoMeta"),
       icon: Gauge,
       href: "/projects",
+      layout: "compact",
+      order: "02",
     },
     {
       title: t("projectThreeTitle"),
@@ -38,6 +43,8 @@ export default async function HomePage() {
       meta: t("projectThreeMeta"),
       icon: ShieldCheck,
       href: "/ama",
+      layout: "compact",
+      order: "03",
     },
   ] as const;
 
@@ -47,18 +54,24 @@ export default async function HomePage() {
       summary: t("toolOneSummary"),
       icon: Braces,
       href: "/toolbox",
+      layout: "feature",
+      order: "01",
     },
     {
       title: t("toolTwoTitle"),
       summary: t("toolTwoSummary"),
       icon: FileText,
       href: "/toolbox",
+      layout: "compact",
+      order: "02",
     },
     {
       title: t("toolThreeTitle"),
       summary: t("toolThreeSummary"),
       icon: Languages,
       href: "/toolbox",
+      layout: "compact",
+      order: "03",
     },
   ] as const;
 
@@ -124,25 +137,36 @@ export default async function HomePage() {
           subtitle={t("projectsSubtitle")}
         />
 
-        <div className="home-preview-grid md:grid-cols-2 xl:grid-cols-3">
+        <div className="surface-bento-grid" aria-label={t("projectsTitle")}>
           {projects.map((project) => {
             const Icon = project.icon;
+
             return (
               <Card
                 key={project.title}
                 as="article"
                 interactive
-                className="home-preview-card"
+                data-cursor-interactive="card"
+                className={cn(
+                  "surface-bento-card",
+                  project.layout === "feature" && "surface-bento-card-feature",
+                  project.layout === "compact" && "surface-bento-card-compact",
+                )}
               >
-                <div className="home-preview-icon">
-                  <Icon size={17} aria-hidden="true" className="ui-follow-icon" />
+                <div className="surface-bento-head">
+                  <span className="surface-bento-icon" aria-hidden="true">
+                    <Icon size={17} className="ui-follow-icon" />
+                  </span>
+                  <span className="surface-bento-index">{project.order}</span>
                 </div>
-                <div className="grid gap-2">
+
+                <div className="surface-bento-copy">
                   <h3 className="t-card-title">{project.title}</h3>
                   <p className="t-card-copy">{project.summary}</p>
-                  <p className="t-card-meta">{project.meta}</p>
+                  <p className="surface-bento-meta">{project.meta}</p>
                 </div>
-                <div>
+
+                <div className="surface-bento-footer">
                   <Link href={project.href} className={buttonClassName("ghost", "px-0")}>
                     {t("projectAction")}
                     <ArrowRight size={14} aria-hidden="true" className="ui-follow-icon" />
@@ -161,24 +185,35 @@ export default async function HomePage() {
           subtitle={t("toolboxSubtitle")}
         />
 
-        <div className="home-preview-grid md:grid-cols-2 xl:grid-cols-3">
+        <div className="surface-bento-grid" aria-label={t("toolboxTitle")}>
           {tools.map((tool) => {
             const Icon = tool.icon;
+
             return (
               <Card
                 key={tool.title}
                 as="article"
                 interactive
-                className="home-preview-card"
+                data-cursor-interactive="card"
+                className={cn(
+                  "surface-bento-card",
+                  tool.layout === "feature" && "surface-bento-card-feature",
+                  tool.layout === "compact" && "surface-bento-card-compact",
+                )}
               >
-                <div className="home-preview-icon">
-                  <Icon size={17} aria-hidden="true" className="ui-follow-icon" />
+                <div className="surface-bento-head">
+                  <span className="surface-bento-icon" aria-hidden="true">
+                    <Icon size={17} className="ui-follow-icon" />
+                  </span>
+                  <span className="surface-bento-index">{tool.order}</span>
                 </div>
-                <div className="grid gap-2">
+
+                <div className="surface-bento-copy">
                   <h3 className="t-card-title">{tool.title}</h3>
                   <p className="t-card-copy">{tool.summary}</p>
                 </div>
-                <div>
+
+                <div className="surface-bento-footer">
                   <Link href={tool.href} className={buttonClassName("ghost", "px-0")}>
                     {t("toolAction")}
                     <ArrowRight size={14} aria-hidden="true" className="ui-follow-icon" />
