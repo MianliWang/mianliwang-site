@@ -3,7 +3,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Check, Clipboard, Download, LoaderCircle, RotateCcw } from "lucide-react";
+import {
+  Check,
+  Clipboard,
+  Download,
+  FileInput,
+  FileOutput,
+  LoaderCircle,
+  RotateCcw,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
@@ -204,7 +212,10 @@ export function PdfTranslateTool() {
       <div className="toolbox-panel-grid">
         <div className="toolbox-pane ui-card">
           <div className="toolbox-pane-header">
-            <p className="t-eyebrow">{t("common.input")}</p>
+            <p className="toolbox-pane-title">
+              <FileInput size={13} aria-hidden="true" className="toolbox-pane-title-icon" />
+              <span className="t-eyebrow">{t("common.input")}</span>
+            </p>
             <span className="toolbox-badge">{t("tools.pdfTranslate.apiBadge")}</span>
           </div>
 
@@ -288,7 +299,10 @@ export function PdfTranslateTool() {
 
         <div className="toolbox-pane ui-card">
           <div className="toolbox-pane-header">
-            <p className="t-eyebrow">{t("common.output")}</p>
+            <p className="toolbox-pane-title">
+              <FileOutput size={13} aria-hidden="true" className="toolbox-pane-title-icon" />
+              <span className="t-eyebrow">{t("common.output")}</span>
+            </p>
           </div>
 
           <Textarea

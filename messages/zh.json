@@ -57,11 +57,31 @@
   },
   "Projects": {
     "title": "项目",
-    "description": "用于后续项目文章的最小占位列表。",
-    "itemOneTitle": "个人站设计系统",
-    "itemOneDescription": "用于双语站点的视觉规范与交互基础。",
-    "itemTwoTitle": "工具箱基础能力",
-    "itemTwoDescription": "为 Base64、文本工具和文档翻译 UI 准备复用结构。"
+    "description": "将项目摘要组织为结构化条目，并要求中英 slug 严格对齐。",
+    "openItem": "打开",
+    "items": [
+      {
+        "slug": "personal-site-system",
+        "title": "个人站系统设计",
+        "summary": "建立视觉 token、双语路由与交互基线，保证长期迭代的一致性。",
+        "tags": ["设计系统", "Next.js", "双语"],
+        "href": "/writing/interaction-rhythm"
+      },
+      {
+        "slug": "motion-runtime-architecture",
+        "title": "动效运行时架构",
+        "summary": "以单循环指针运行时和自适应质量档位，保证不同设备负载下的稳定表现。",
+        "tags": ["性能", "动效", "运行时"],
+        "href": "/reading"
+      },
+      {
+        "slug": "ama-minimal-product",
+        "title": "AMA 最小产品化",
+        "summary": "基于 Route Handler 的留言能力，结合存储与防滥用策略，实现可部署的最小闭环。",
+        "tags": ["API", "稳定性", "运维"],
+        "href": "/ama"
+      }
+    ]
   },
   "Toolbox": {
     "eyebrow": "工具集合",
@@ -72,6 +92,37 @@
     "workspaceDescription": "后续新增工具只需新增一个配置项和一个面板组件。",
     "searchPlaceholder": "",
     "emptySearch": "没有匹配的工具。",
+    "openItem": "打开工具",
+    "items": [
+      {
+        "slug": "base64",
+        "title": "Base64 编码 / 解码",
+        "summary": "在 UTF-8 文本与 Base64 之间稳定转换，并支持文件载荷处理。",
+        "tags": ["编码", "载荷", "实用工具"],
+        "href": "/toolbox"
+      },
+      {
+        "slug": "text-utils",
+        "title": "文本工具",
+        "summary": "在一个流程内完成 trim、空白规范化、大小写转换与 JSON 美化。",
+        "tags": ["文本", "格式化", "清洗"],
+        "href": "/toolbox"
+      },
+      {
+        "slug": "text-translate",
+        "title": "文本翻译",
+        "summary": "通过 `/api/translate` 完成纯文本翻译，并明确控制源语言与目标语言。",
+        "tags": ["翻译", "OpenAI", "文本"],
+        "href": "/toolbox"
+      },
+      {
+        "slug": "pdf-translate",
+        "title": "PDF 翻译（BabelDOC）",
+        "summary": "通过 FastAPI + BabelDOC 后端处理 PDF 翻译并下载结果文件。",
+        "tags": ["PDF", "BabelDOC", "文档"],
+        "href": "/toolbox"
+      }
+    ],
     "categories": {
       "encoding": "编码转换",
       "text": "文本处理",

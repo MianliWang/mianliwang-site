@@ -57,11 +57,31 @@
   },
   "Projects": {
     "title": "Projects",
-    "description": "A minimal placeholder list for upcoming project write-ups.",
-    "itemOneTitle": "Personal Site System",
-    "itemOneDescription": "Visual system and interaction groundwork for the bilingual site.",
-    "itemTwoTitle": "Toolbox Foundations",
-    "itemTwoDescription": "Reusable architecture for Base64, text utilities, and document translation UI."
+    "description": "Project snapshots organized as structured entries with bilingual slug alignment.",
+    "openItem": "Open",
+    "items": [
+      {
+        "slug": "personal-site-system",
+        "title": "Personal Site System",
+        "summary": "Visual tokens, bilingual routing, and interaction baselines for long-term maintainability.",
+        "tags": ["Design System", "Next.js", "i18n"],
+        "href": "/writing/interaction-rhythm"
+      },
+      {
+        "slug": "motion-runtime-architecture",
+        "title": "Motion Runtime Architecture",
+        "summary": "Single-loop pointer runtime and adaptive quality tiers to keep motion stable under device pressure.",
+        "tags": ["Performance", "Motion", "Runtime"],
+        "href": "/reading"
+      },
+      {
+        "slug": "ama-minimal-product",
+        "title": "AMA Minimal Product",
+        "summary": "Route handlers with practical storage and abuse control choices that can scale from local to shared backends.",
+        "tags": ["API", "Reliability", "Operations"],
+        "href": "/ama"
+      }
+    ]
   },
   "Toolbox": {
     "eyebrow": "Tool Collection",
@@ -72,6 +92,37 @@
     "workspaceDescription": "Add a new tool by registering one config and one panel component.",
     "searchPlaceholder": "",
     "emptySearch": "No tools matched your search.",
+    "openItem": "Open tool",
+    "items": [
+      {
+        "slug": "base64",
+        "title": "Base64 Encode / Decode",
+        "summary": "Convert text and files between UTF-8 payloads and Base64 strings with validation.",
+        "tags": ["Encoding", "Payload", "Utility"],
+        "href": "/toolbox"
+      },
+      {
+        "slug": "text-utils",
+        "title": "Text Utilities",
+        "summary": "Trim, normalize whitespace, adjust case, and optionally pretty-print JSON in one flow.",
+        "tags": ["Text", "Formatting", "Cleanup"],
+        "href": "/toolbox"
+      },
+      {
+        "slug": "text-translate",
+        "title": "Text Translate",
+        "summary": "Translate plain text through `/api/translate` with explicit source and target language controls.",
+        "tags": ["Translation", "OpenAI", "Text"],
+        "href": "/toolbox"
+      },
+      {
+        "slug": "pdf-translate",
+        "title": "PDF Translate (BabelDOC)",
+        "summary": "Translate PDF files through the FastAPI + BabelDOC backend and download processed output.",
+        "tags": ["PDF", "BabelDOC", "Document"],
+        "href": "/toolbox"
+      }
+    ],
     "categories": {
       "encoding": "Encoding",
       "text": "Text",

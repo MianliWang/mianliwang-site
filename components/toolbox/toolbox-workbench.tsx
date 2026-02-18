@@ -3,7 +3,14 @@
 import { Input } from "@/components/ui/input";
 import { buttonClassName } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
-import { Search } from "lucide-react";
+import {
+  Binary,
+  FileText,
+  Languages,
+  Search,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { TOOLBOX_TOOLS } from "./tool-registry";
@@ -20,6 +27,11 @@ const TOOL_TEXT_KEY: Record<
 };
 
 const CATEGORY_ORDER: ToolboxCategoryId[] = ["encoding", "text", "document"];
+const CATEGORY_ICONS: Record<ToolboxCategoryId, LucideIcon> = {
+  encoding: Binary,
+  text: FileText,
+  document: Languages,
+};
 
 export function ToolboxWorkbench() {
   const t = useTranslations("Toolbox");
@@ -65,7 +77,12 @@ export function ToolboxWorkbench() {
       <aside className="toolbox-sidebar ui-card">
         <header className="toolbox-sidebar-header">
           <p className="t-eyebrow">{t("workspaceEyebrow")}</p>
-          <h2 className="toolbox-sidebar-title">{t("workspaceTitle")}</h2>
+          <div className="toolbox-sidebar-title-row">
+            <span className="toolbox-sidebar-title-icon-wrap" aria-hidden="true">
+              <Sparkles size={14} className="ui-follow-icon" />
+            </span>
+            <h2 className="toolbox-sidebar-title">{t("workspaceTitle")}</h2>
+          </div>
           <p className="toolbox-sidebar-copy">{t("workspaceDescription")}</p>
         </header>
 
@@ -84,44 +101,53 @@ export function ToolboxWorkbench() {
           {groupedTools.length === 0 ? (
             <p className="toolbox-empty">{t("emptySearch")}</p>
           ) : (
-            groupedTools.map((group) => (
-              <section key={group.category} className="toolbox-nav-group">
-                <p className="toolbox-nav-category">{t(`categories.${group.category}`)}</p>
-                <ul className="toolbox-nav-list">
-                  {group.tools.map((tool) => {
-                    const isActive = tool.id === activeToolId;
-                    const Icon = tool.icon;
-                    const toolKey = TOOL_TEXT_KEY[tool.id];
+            groupedTools.map((group) => {
+              const CategoryIcon = CATEGORY_ICONS[group.category];
 
-                    return (
-                      <li key={tool.id}>
-                        <button
-                          type="button"
-                          onClick={() => setActiveToolId(tool.id)}
-                          className={cn(
-                            buttonClassName("ghost", "toolbox-nav-item"),
-                            isActive && "toolbox-nav-item-active",
-                          )}
-                          data-active={isActive ? "true" : "false"}
-                        >
-                          <span className="toolbox-nav-icon" aria-hidden="true">
-                            <Icon size={14} className="ui-follow-icon" />
-                          </span>
-                          <span className="toolbox-nav-text">
-                            <span className="toolbox-nav-title">
-                              {t(`tools.${toolKey}.title`)}
+              return (
+                <section key={group.category} className="toolbox-nav-group">
+                  <p className="toolbox-nav-category">
+                    <span className="toolbox-nav-category-icon" aria-hidden="true">
+                      <CategoryIcon size={12} className="ui-follow-icon" />
+                    </span>
+                    <span>{t(`categories.${group.category}`)}</span>
+                  </p>
+                  <ul className="toolbox-nav-list">
+                    {group.tools.map((tool) => {
+                      const isActive = tool.id === activeToolId;
+                      const Icon = tool.icon;
+                      const toolKey = TOOL_TEXT_KEY[tool.id];
+
+                      return (
+                        <li key={tool.id}>
+                          <button
+                            type="button"
+                            onClick={() => setActiveToolId(tool.id)}
+                            className={cn(
+                              buttonClassName("ghost", "toolbox-nav-item"),
+                              isActive && "toolbox-nav-item-active",
+                            )}
+                            data-active={isActive ? "true" : "false"}
+                          >
+                            <span className="toolbox-nav-icon" aria-hidden="true">
+                              <Icon size={14} className="ui-follow-icon" />
                             </span>
-                            <span className="toolbox-nav-desc">
-                              {t(`tools.${toolKey}.navHint`)}
+                            <span className="toolbox-nav-text">
+                              <span className="toolbox-nav-title">
+                                {t(`tools.${toolKey}.title`)}
+                              </span>
+                              <span className="toolbox-nav-desc">
+                                {t(`tools.${toolKey}.navHint`)}
+                              </span>
                             </span>
-                          </span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-            ))
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              );
+            })
           )}
         </div>
       </aside>

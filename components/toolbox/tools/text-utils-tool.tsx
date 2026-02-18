@@ -3,7 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/cn";
-import { Check, Clipboard, RotateCcw } from "lucide-react";
+import {
+  Check,
+  Clipboard,
+  FileInput,
+  FileOutput,
+  RotateCcw,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
@@ -120,7 +126,10 @@ export function TextUtilsTool() {
       <div className="toolbox-panel-grid">
         <div className="toolbox-pane ui-card">
           <div className="toolbox-pane-header">
-            <p className="t-eyebrow">{t("common.input")}</p>
+            <p className="toolbox-pane-title">
+              <FileInput size={13} aria-hidden="true" className="toolbox-pane-title-icon" />
+              <span className="t-eyebrow">{t("common.input")}</span>
+            </p>
           </div>
 
           <Textarea
@@ -195,7 +204,10 @@ export function TextUtilsTool() {
 
         <div className="toolbox-pane ui-card">
           <div className="toolbox-pane-header">
-            <p className="t-eyebrow">{t("common.output")}</p>
+            <p className="toolbox-pane-title">
+              <FileOutput size={13} aria-hidden="true" className="toolbox-pane-title-icon" />
+              <span className="t-eyebrow">{t("common.output")}</span>
+            </p>
           </div>
 
           <Textarea

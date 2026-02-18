@@ -410,6 +410,24 @@ html.theme-transitioning .reading-hud-marker-dot {
   gap: 0.45rem;
 }
 
+.toolbox-sidebar-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.48rem;
+}
+
+.toolbox-sidebar-title-icon-wrap {
+  display: inline-flex;
+  height: 1.86rem;
+  width: 1.86rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-soft);
+  border: 1px solid color-mix(in oklab, var(--surface-border) 78%, transparent 22%);
+  background: color-mix(in oklab, var(--surface-level-1) 88%, transparent 12%);
+  color: var(--accent);
+}
+
 .toolbox-sidebar-title {
   font-size: 1.06rem;
   font-weight: var(--type-weight-semibold);
@@ -454,11 +472,21 @@ html.theme-transitioning .reading-hud-marker-dot {
 }
 
 .toolbox-nav-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
   font-size: 0.69rem;
   font-weight: var(--type-weight-medium);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+.toolbox-nav-category-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
 }
 
 .toolbox-nav-list {
@@ -547,6 +575,20 @@ html.theme-transitioning .reading-hud-marker-dot {
   align-items: center;
   justify-content: space-between;
   gap: 0.62rem;
+}
+
+.toolbox-pane-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+}
+
+.toolbox-pane-title .t-eyebrow {
+  line-height: 1;
+}
+
+.toolbox-pane-title-icon {
+  color: var(--accent);
 }
 
 .toolbox-badge {
@@ -1379,6 +1421,7 @@ html.theme-transitioning .reading-hud-marker-dot {
   position: fixed;
   inset: 0;
   pointer-events: none;
+  user-select: none;
   z-index: 26;
   --reading-hud-progress: 0;
   --reading-hud-ruler-left: 18px;
@@ -1388,6 +1431,7 @@ html.theme-transitioning .reading-hud-marker-dot {
   position: fixed;
   top: calc(5.6rem + env(safe-area-inset-top, 0px));
   left: var(--reading-hud-ruler-left);
+  pointer-events: none;
   width: 1.1rem;
   height: min(60vh, 27rem);
   transform: translateX(-50%);
@@ -1450,6 +1494,7 @@ html.theme-transitioning .reading-hud-marker-dot {
   position: fixed;
   top: 0;
   left: 0;
+  pointer-events: none;
   opacity: 0;
   transform: translate3d(-120vw, -120vh, 0) translate(-50%, -50%);
   will-change: transform, opacity;

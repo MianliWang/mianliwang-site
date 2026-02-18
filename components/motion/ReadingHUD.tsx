@@ -18,6 +18,17 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
 }
 
+function readMainGutterPx() {
+  const main = document.getElementById("main-content");
+  if (!main) {
+    return 16;
+  }
+
+  const style = window.getComputedStyle(main);
+  const parsed = Number.parseFloat(style.paddingLeft);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 16;
+}
+
 export function ReadingHUD({
   scopeId,
   itemSelector = "[data-reading-anchor]",
@@ -59,6 +70,7 @@ export function ReadingHUD({
     let currentRulerLeft = targetRulerLeft;
     let animationFrameId = 0;
     let scheduleFrameId = 0;
+    let mainGutterPx = readMainGutterPx();
 
     const render = () => {
       marker.style.opacity = activeAnchor ? "1" : "0";
@@ -80,12 +92,13 @@ export function ReadingHUD({
       const scopeRect = scope.getBoundingClientRect();
       const anchorRect = activeAnchor.getBoundingClientRect();
       const isMobile = window.innerWidth <= 768;
-      const markerOffset = isMobile ? 9 : 12;
-      const rulerOffset = isMobile ? 16 : 30;
-      const edgePadding = 10;
+      const rulerOffset = isMobile
+        ? clamp(mainGutterPx * 0.66, 10, 14)
+        : clamp(mainGutterPx * 0.9, 14, 26);
+      const edgePadding = isMobile ? 6 : 8;
       const dotRadius = isMobile ? 3 : 3.5;
-      const rulerMinX = edgePadding;
-      const rulerMaxX = window.innerWidth - edgePadding;
+      const rulerMinX = edgePadding + dotRadius;
+      const rulerMaxX = window.innerWidth - edgePadding - dotRadius;
       const markerMinX = edgePadding + dotRadius;
       const markerMaxX = window.innerWidth - edgePadding - dotRadius;
       const hudTop = isMobile ? 84 : 102;
@@ -96,7 +109,7 @@ export function ReadingHUD({
         rulerMinX,
         rulerMaxX,
       );
-      targetX = clamp(targetRulerLeft + markerOffset, markerMinX, markerMaxX);
+      targetX = clamp(targetRulerLeft, markerMinX, markerMaxX);
       targetY = clamp(Math.round(anchorRect.top), hudTop, hudBottom);
     };
 
@@ -228,15 +241,20 @@ export function ReadingHUD({
       observer.observe(anchor);
     }
 
+    const handleResize = () => {
+      mainGutterPx = readMainGutterPx();
+      scheduleRefresh();
+    };
+
     window.addEventListener("scroll", scheduleRefresh, { passive: true });
-    window.addEventListener("resize", scheduleRefresh);
+    window.addEventListener("resize", handleResize);
 
     refreshTargets();
 
     return () => {
       observer.disconnect();
       window.removeEventListener("scroll", scheduleRefresh);
-      window.removeEventListener("resize", scheduleRefresh);
+      window.removeEventListener("resize", handleResize);
 
       if (scheduleFrameId) {
         window.cancelAnimationFrame(scheduleFrameId);
