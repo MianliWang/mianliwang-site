@@ -1,8 +1,10 @@
 import { buttonClassName } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
+import type { AppLocale } from "@/i18n/routing";
 import { cn } from "@/lib/cn";
 import { parseCatalogItems } from "@/lib/content-catalog";
+import { mergeCatalogItemsWithOverlay } from "@/lib/content";
 import {
   ArrowRight,
   Braces,
@@ -22,9 +24,21 @@ const TOOLBOX_ICON_BY_SLUG: Record<string, LucideIcon> = {
   "pdf-translate": File,
 };
 
-export default async function ToolboxPage() {
+type ToolboxPageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+function isAppLocale(value: string): value is AppLocale {
+  return value === "en" || value === "zh";
+}
+
+export default async function ToolboxPage({ params }: ToolboxPageProps) {
+  const { locale } = await params;
   const t = await getTranslations("Toolbox");
-  const items = parseCatalogItems(t.raw("items"));
+  const baseItems = parseCatalogItems(t.raw("items"));
+  const items = isAppLocale(locale)
+    ? await mergeCatalogItemsWithOverlay("toolbox", locale, baseItems)
+    : baseItems;
 
   return (
     <section className="section-shell">

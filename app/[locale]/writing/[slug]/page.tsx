@@ -1,5 +1,10 @@
 import { ReadingHUD } from "@/components/motion/ReadingHUD";
 import { routing } from "@/i18n/routing";
+import type { AppLocale } from "@/i18n/routing";
+import {
+  getWritingArticleFromContent,
+  listWritingSlugsFromContent,
+} from "@/lib/content";
 import { parseWritingArticles } from "@/lib/writing";
 import enMessages from "@/messages/en.json";
 import zhMessages from "@/messages/zh.json";
@@ -265,14 +270,27 @@ const writingMessagesByLocale = {
   zh: zhMessages.Writing?.articles,
 } as const;
 
-export function generateStaticParams() {
-  return routing.locales.flatMap((locale) => {
-    const entries = parseWritingArticles(writingMessagesByLocale[locale]);
-    return entries.map((entry) => ({
-      locale,
-      slug: entry.slug,
-    }));
-  });
+function isAppLocale(value: string): value is AppLocale {
+  return value === "en" || value === "zh";
+}
+
+export async function generateStaticParams() {
+  const byLocale = await Promise.all(
+    routing.locales.map(async (locale) => {
+      const messageSlugs = parseWritingArticles(writingMessagesByLocale[locale]).map(
+        (entry) => entry.slug,
+      );
+      const contentSlugs = await listWritingSlugsFromContent(locale);
+      const mergedSlugs = new Set([...messageSlugs, ...contentSlugs]);
+
+      return [...mergedSlugs].map((slug) => ({
+        locale,
+        slug,
+      }));
+    }),
+  );
+
+  return byLocale.flat();
 }
 
 export default async function WritingArticlePage({
@@ -280,16 +298,21 @@ export default async function WritingArticlePage({
 }: WritingArticlePageProps) {
   const { slug, locale } = await params;
   const t = await getTranslations("Writing");
-  const article = parseWritingArticles(t.raw("articles")).find(
+  const messageArticle = parseWritingArticles(t.raw("articles")).find(
     (entry) => entry.slug === slug,
   );
+  const contentArticle = isAppLocale(locale)
+    ? await getWritingArticleFromContent(locale, slug)
+    : null;
+  const article = contentArticle ?? messageArticle;
 
   if (!article) {
     notFound();
   }
 
   const articleId = `writing-article-${article.slug}`;
-  const appendixSections = getAppendixSections(locale, article.slug);
+  const appendixSections =
+    contentArticle === null ? getAppendixSections(locale, article.slug) : [];
 
   return (
     <section className="writing-page-shell">

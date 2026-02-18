@@ -32,6 +32,7 @@ data/ama-messages.json
 # misc
 .DS_Store
 Thumbs.db
+.obsidian/
 .vercel
 .turbo
 

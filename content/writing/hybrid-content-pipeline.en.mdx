@@ -1,0 +1,24 @@
+---
+title: "Hybrid Content Pipeline"
+date: "2026-02-18"
+summary: "Writing content moves to mdx files while projects and toolbox stay message-driven with optional overlays."
+tags:
+  - architecture
+  - content
+  - obsidian
+eyebrow: "Engineering Notes"
+---
+
+This article demonstrates the mixed pipeline: writing in files, catalog data in messages, and runtime interaction data in Upstash or database services.
+
+## Why this split works
+
+Writing is long-form and benefits from markdown authoring tools. Project and toolbox cards are structured catalogs and stay simple in localized json files.
+
+The split keeps routing stable and avoids large refactors.
+
+## Fallback contract
+
+When a slug exists in `content/writing`, the page reads mdx first. If a file is missing, it falls back to `messages/*.json` so current pages do not break.
+
+This makes rollout and rollback predictable.

@@ -2,8 +2,10 @@ import { buttonClassName } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Link } from "@/i18n/navigation";
+import type { AppLocale } from "@/i18n/routing";
 import { cn } from "@/lib/cn";
 import { parseCatalogItems } from "@/lib/content-catalog";
+import { mergeCatalogItemsWithOverlay } from "@/lib/content";
 import {
   ArrowRight,
   FolderKanban,
@@ -49,10 +51,22 @@ function resolveActionLabel(
   return fallback;
 }
 
-export default async function ProjectsPage() {
+type ProjectsPageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+function isAppLocale(value: string): value is AppLocale {
+  return value === "en" || value === "zh";
+}
+
+export default async function ProjectsPage({ params }: ProjectsPageProps) {
+  const { locale } = await params;
   const t = await getTranslations("Projects");
   const nav = await getTranslations("Nav");
-  const items = parseCatalogItems(t.raw("items"));
+  const baseItems = parseCatalogItems(t.raw("items"));
+  const items = isAppLocale(locale)
+    ? await mergeCatalogItemsWithOverlay("projects", locale, baseItems)
+    : baseItems;
 
   return (
     <section className="section-shell">
